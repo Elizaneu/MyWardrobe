@@ -6,7 +6,9 @@ const serv = require('express')();
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
-const {getUser} = require("./User");
+
+//import functions
+const {createUser, getUser} = require("./User");
 
 //connect to mysql serv
 const mysqlConn = mysql.createConnection({
@@ -29,6 +31,7 @@ serv.use(cookieParser());
 serv.use(cors(corsOptions));
 
 serv.get("/user/:id?", getUser(mysqlConn));
+serv.post("/user/", createUser(mysqlConn));
 
 mysqlConn.connect(err =>{
     if (err){
