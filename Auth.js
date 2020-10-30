@@ -36,20 +36,20 @@ exports.isAuth = (mysql) => (req, res) => {
 };
 
 exports.login = (mysql) => (req, res) => {
-    if (!req.body.email || !req.body.password) {
+    if (!req.body.Email || !req.body.Password) {
         res.json({
             isAuth: false,
-            message: "error getting data"
+            error: "error getting data"
         });
         return;
     }
-    mysql.query(`SELECT * FROM user WHERE Email = '${req.body.email}' AND Password = '${req.body.password}'`,
+    mysql.query(`SELECT * FROM user WHERE Email = '${req.body.Email}' AND Password = '${req.body.Password}'`,
         (error, result) => {
             if (error) throw error;
             if (result.length === 0) {
                 res.json({
                     isAuth: false,
-                    message: "incorrect email or password"
+                    error: "incorrect email or password"
                 });
             } else{
                 if (req.body.rememberMe) {
