@@ -4,13 +4,16 @@ const mysql = require("mysql");
 
 //import express package
 const serv = require('express')();
+
+const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 //import functions
-const {createUser, getUser, deleteUser} = require("./User");
+const {createUser, getUser, deleteUser, editUser} = require("./User");
 const {isAuth, login, logout} = require("./Auth");
+const {createThing} = require("./Thing");
 
 //connect to mysql serv
 const mysqlConn = mysql.createConnection({
@@ -31,15 +34,23 @@ serv.use(bodyParser.json());
 serv.use(bodyParser.urlencoded({extended: true}));
 serv.use(cookieParser());
 serv.use(cors(corsOptions));
+serv.use(fileUpload({
+    limits: { fileSize: 50 * 1024 * 1024 },
+}));
 
+//UserAPI
 serv.get("/user/:id?", getUser(mysqlConn));
 serv.post("/user/", createUser(mysqlConn));
 serv.delete("/user/:id?", deleteUser(mysqlConn));
+serv.put("/user/", editUser(mysqlConn));
 
+//AuthAPI
 serv.get("/auth/", isAuth(mysqlConn));
 serv.post("/auth/", login(mysqlConn));
 serv.delete("/auth/", logout(mysqlConn));
 
+//ThingAPI
+serv.post("/thing/", createThing(mysqlConn));
 
 mysqlConn.connect(err =>{
     if (err){
