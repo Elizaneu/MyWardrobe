@@ -1,0 +1,120 @@
+.button__dark {
+    padding: 3px 20px;
+    background-color: rgba(196, 138, 105, 0.4);
+    border-radius: 6px;
+    text-align: center;
+    margin-bottom: 10px;
+    margin-top: 10px;
+    border: none;
+    outline: none;
+}
+
+.button__light {
+    padding: 1px 10px;
+    border: 1px solid black;
+    background-color: white;
+    border-radius: 6px;
+    text-align: center;
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+.categoryItem_list {
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+}
+
+.category_items {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.searchSpace {
+    position: absolute;
+    margin-left: 30px;
+    margin-top: 10px;
+}
+
+.first {
+    display: none;
+}
+
+.second {
+    /*display: none;*/
+}
+
+.mainFrame {
+    position: relative;
+    width: 100%;
+    height: 580px;
+    margin-top: 10px;
+    background: linear-gradient(90deg, #FDFCFB 0%, #E2D1C3 100%);
+}
+
+.searchResult {
+    position: absolute;
+    right: 30px;
+    margin-top: 20px;
+    width: 600px;
+}
+
+
+.galleryRow {
+    /*border: 1px solid black;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    width: 100%;
+    justify-items: stretch;
+    margin-bottom: 10px;*/
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.gallery_img {
+    width: 180px;
+    height: 180px;
+    border: 2px solid #C48A69;
+    margin-top: 10px;
+}
+
+.gallery {
+    padding-right: 10px;
+}
+
+.button__light__brown {
+    border: 1px solid #C48A69;
+}
+
+.button_icon {
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.gallery_like {
+    width: 180px;
+    font-size: 15px;
+    border: none;
+    outline: none;
+}
+
+.bottomButton {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding-top: 10px;
+}
+
+.bottom {
+    position: relative;
+    height: 100px;
+    width: 100%;
+}
+
+.bottom_icon {
+    margin: 20px;
+}

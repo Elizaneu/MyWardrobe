@@ -1,0 +1,15 @@
+*{
+    font-family: Sunflower, serif;
+    font-style: normal;
+    margin: 0;
+}
+
+form {
+    position: relative;
+    width: 400px;
+    height: 400px;
+    left: calc(50% - 400px/2);
+    top: 50px;
+    background: rgba(196, 138, 105, 0.6);
+    border-radius: 10px;
+}

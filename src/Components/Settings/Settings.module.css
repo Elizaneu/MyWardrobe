@@ -1,0 +1,60 @@
+.icon {
+    position: relative;
+    left: 170px;
+    top: 10px;
+}
+
+.title {
+    position: relative;
+    width: 200px;
+    height: 30px;
+    left: 100px;
+    top: 10px;
+    font-size: 30px;
+    text-align: center;
+    color: white;
+    text-shadow: #C48A69 0.5px 0.5px 0, #C48A69 -0.5px -0.5px 0,
+    #C48A69 -0.5px 0.5px 0, #C48A69 0.5px -0.5px 0;
+}
+
+.form_p {
+    left: 20px;
+    top: 20px;
+    padding: 5px 0 5px 0;
+    position: relative;
+    display: flex;
+}
+
+.form_btn {
+    position: relative;
+    background-color: #C48A69;
+    border: none;
+    width: 160px;
+    left: 120px;
+    height: 30px;
+    outline: none;
+    border-radius: 10px;
+    font-size: 20px;
+    top: 25px;
+}
+
+.form_input {
+    display: flex;
+    background-color: rgba(196, 138, 105, 0);
+    outline: none;
+    border: none;
+    width: 160px;
+    left: 100px;
+    border-bottom: 1px solid black;
+}
+
+.form_label {
+    width: 100px;
+    text-align: right;
+    font-size: 15px;
+}
+
+::placeholder {
+    font-size: 15px;
+    color: black;
+}

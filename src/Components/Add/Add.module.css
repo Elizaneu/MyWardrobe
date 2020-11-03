@@ -1,0 +1,62 @@
+.icon {
+    position: relative;
+    left: 170px;
+    top: 10px;
+}
+
+.title {
+    position: relative;
+    width: 200px;
+    height: 30px;
+    left: 100px;
+    top: 10px;
+    font-size: 28px;
+    text-align: center;
+    color: white;
+    text-shadow: #C48A69 0.5px 0.5px 0, #C48A69 -0.5px -0.5px 0,
+    #C48A69 -0.5px 0.5px 0, #C48A69 0.5px -0.5px 0;
+}
+
+.choose_file {
+    position: absolute;
+    background-color: #C48A69;
+    border: none;
+    outline: none;
+    border-radius: 10px;
+    font-size: 20px;
+    top: 150px;
+    display: flex;
+}
+
+.choose_cat {
+    top: 190px;
+}
+
+.btn {
+    background: rgba(196, 138, 105, 0);
+    position: absolute;
+    width: 220px;
+    left: 90px;
+    height: 30px;
+    outline: none;
+    border-radius: 10px;
+    font-size: 15px;
+    border: 1px solid black;
+}
+
+.form_btn {
+    position: absolute;
+    background-color: #C48A69;
+    border: none;
+    width: 220px;
+    left: 90px;
+    height: 40px;
+    outline: none;
+    border-radius: 10px;
+    font-size: 20px;
+    top: 230px;
+}
+
+.cl {
+    display: none;
+}
