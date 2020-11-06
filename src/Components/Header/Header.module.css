@@ -39,7 +39,6 @@
 .header_btn {
     position: static;
     background-color: rgba(0,0,0,0);
-    /*border: none;*/
     height: 20px;
     font-size: 15px;
     text-align: center;
@@ -47,4 +46,11 @@
     display: grid;
     grid-template-columns:1fr 100% ;
     grid-gap: 2px;
+    color: black;
+    text-decoration: none;
+}
+
+
+.exit_btn, .header_btn:hover {
+    cursor: pointer;
 }

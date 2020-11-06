@@ -1,6 +1,7 @@
 import React from "react";
 import Header from "../Header/Header";
 import c from "./Create.module.css";
+import withAuthRedirect from "../../HOC/withAuthRedirect";
 import plus from "../../assets/image/Header/plus.svg";
 import back from "../../assets/image/back.svg";
 import img1 from "../../assets/image/Wardrobe/img1.jpg";
@@ -158,4 +159,4 @@ const Create = (props) => {
     )
 }
 
-export default Create;
+export default withAuthRedirect(Create);

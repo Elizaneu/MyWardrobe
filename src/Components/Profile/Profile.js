@@ -1,6 +1,7 @@
 import React from "react";
 import c from "./Profile.module.css";
 import Header from "../Header/Header";
+import withAuthRedirect from "../../HOC/withAuthRedirect";
 import img1 from "../../assets/image/Gallery/img1.jpg";
 import img2 from "../../assets/image/Gallery/img2.jpg";
 import img3 from "../../assets/image/Gallery/img3.jpg";
@@ -54,4 +55,4 @@ const Profile = (props) => {
     )
 }
 
-export default Profile;
+export default withAuthRedirect(Profile);

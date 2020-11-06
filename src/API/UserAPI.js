@@ -18,3 +18,7 @@ export const getAuth = () => {
 export const logout = () => {
     return ms.delete('/auth/').then(res=>res.data)
 }
+
+export const register = (LastName, FirstName, Email, Password) => {
+    return ms.post('/user/', {LastName, FirstName, Email, Password}).then(res=>res.data);
+}

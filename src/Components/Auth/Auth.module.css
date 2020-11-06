@@ -110,3 +110,10 @@
     text-align: right;
     color: black;
 }
+
+.error {
+    position: relative;
+    text-align: center;
+    font-size: 20px;
+    color: darkred;
+}

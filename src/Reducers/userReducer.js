@@ -1,21 +1,28 @@
-import {getAuth, login, logout} from "../API/UserAPI";
+import {getAuth, login, logout, register} from "../API/UserAPI";
 
 const SET_AUTH = "SET_AUTH_USER_REDUCER"
+const SET_CREATE = "SET_CREATE_USER_REDUCER"
 const SET_MESSAGE = "SET_MESSAGE_USER_REDUCER"
 const SET_CURRENT_USER = "SET_CURRENT_USER_REDUCER"
 
 const initialState = {
     isAuth: false,
+    isCreated: false,
     message: "",
-    currentUser:{}
+    currentUser: {}
 }
 
-const userReducer = (state = initialState, action) =>{
-    switch(action.type){
+const userReducer = (state = initialState, action) => {
+    switch (action.type) {
         case SET_AUTH:
-            return{
+            return {
                 ...state,
                 isAuth: action.isAuth
+            }
+        case SET_CREATE:
+            return {
+                ...state,
+                isCreated: action.isCreated
             }
         case SET_MESSAGE:
             return {
@@ -32,18 +39,20 @@ const userReducer = (state = initialState, action) =>{
     }
 }
 
-const setAuth = (isAuth) => ({type:SET_AUTH, isAuth})
-const setMessage = (message) => ({type:SET_MESSAGE, message})
-const setCurrentUser = (currentUser) => ({type:SET_CURRENT_USER, currentUser})
+const setAuth = (isAuth) => ({type: SET_AUTH, isAuth})
+const setMessage = (message) => ({type: SET_MESSAGE, message})
+const setCurrentUser = (currentUser) => ({type: SET_CURRENT_USER, currentUser})
+export const setCreate = (isCreated) => ({type: SET_CREATE, isCreated})
 
-export const Login = (Email, Password, rememberMe) => async (dispatch) =>{
+export const Login = (Email, Password, rememberMe) => async (dispatch) => {
     let data = await login(Email, Password, rememberMe);
 
     if (!data.isAuth) {
-        dispatch(setMessage(data.message))
-        setTimeout(()=>{dispatch(setMessage(""))}, 1000)
-    }
-    else{
+        dispatch(setMessage(data.error))
+        setTimeout(() => {
+            dispatch(setMessage(""))
+        }, 1000)
+    } else {
         const user = {
             ...data,
             isAuth: null
@@ -73,6 +82,27 @@ export const Logout = () => async (dispatch) => {
         dispatch(setAuth(false));
         dispatch(setCurrentUser({}));
     }
+}
+
+export const Register = (LastName, FirstName, Email, Password) => async (dispatch) => {
+    try {
+        let data = await register(LastName, FirstName, Email, Password);
+
+        if (!data.isCreated) {
+            dispatch(setMessage(data.error));
+            setTimeout(() => {
+                dispatch(setMessage(""))
+            }, 1000);
+        } else
+            dispatch(setCreate(data.isCreated))
+    } catch (e){
+        dispatch(setMessage(e.response.data.error));
+        setTimeout(() => {
+            dispatch(setMessage(""))
+        }, 1000);
+    }
+
+
 }
 
 export default userReducer
