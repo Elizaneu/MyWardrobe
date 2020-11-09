@@ -1,6 +1,7 @@
 import React from "react";
 import c from "./Favourites.module.css";
 import Header from "../Header/Header";
+import withAuthRedirect from "../../HOC/withAuthRedirect";
 import logo from "../../assets/image/logo.svg";
 import img1 from "../../assets/image/Gallery/img1.jpg";
 import img2 from "../../assets/image/Gallery/img2.jpg";
@@ -64,4 +65,4 @@ const Favourites = (props) => {
     )
 }
 
-export default Favourites;
+export default withAuthRedirect(Favourites);

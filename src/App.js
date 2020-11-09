@@ -15,6 +15,7 @@ import Rec from "./Components/Rec/Rec";
 import Reg from "./Components/Reg/Reg";
 import Wardrobe from "./Components/Wardrobe/Wardrobe";
 import Settings from "./Components/Settings/Settings";
+import Add from "./Components/Add/Add";
 
 class App extends React.Component {
     componentDidMount() {
@@ -36,7 +37,7 @@ class App extends React.Component {
                        render={() => <Favourites/>}/>
                 <Route exact path="/find"
                        render={() => <Find/>}/>
-                <Route exact path="/outfits "
+                <Route exact path="/outfits"
                        render={() => <Outfits/>}/>
                 <Route exact path="/profile"
                        render={() => <Profile/>}/>
@@ -48,6 +49,8 @@ class App extends React.Component {
                        render={() => <Settings/>}/>
                 <Route exact path="/wardrobe"
                        render={() => <Wardrobe/>}/>
+                <Route exact path="/add"
+                       render={() => <Add/>}/>
             </div>
 
         );

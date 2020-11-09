@@ -58,3 +58,13 @@
     font-size: 15px;
     color: black;
 }
+
+
+.delete {
+    position: absolute;
+    top: 310px;
+    width: 130px;
+    left: 120px;
+    text-align: left;
+    color: black;
+}

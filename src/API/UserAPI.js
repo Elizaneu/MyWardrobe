@@ -7,8 +7,8 @@ const ms = axios.create({
     withCredentials: true
 })
 
-export const login = (email, password, rememberMe = true) => {
-    return ms.post('/auth/', {email, password, rememberMe}).then(res=>res.data);
+export const login = (Email, Password, rememberMe = true) => {
+    return ms.post('/auth/', {Email, Password, rememberMe}).then(res=>res.data);
 }
 
 export const getAuth = () => {

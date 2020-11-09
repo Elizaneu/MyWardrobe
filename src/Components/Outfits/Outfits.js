@@ -2,6 +2,7 @@ import React from "react";
 import c from "./Outfits.module.css";
 import Header from "../Header/Header";
 import logo from "../../assets/image/logo.svg";
+import withAuthRedirect from "../../HOC/withAuthRedirect";
 import img1 from "../../assets/image/Gallery/img1.jpg";
 import img2 from "../../assets/image/Gallery/img2.jpg";
 import img3 from "../../assets/image/Gallery/img3.jpg";
@@ -72,4 +73,4 @@ const Outfits = (props) => {
     )
 }
 
-export default Outfits;
+export default withAuthRedirect(Outfits);

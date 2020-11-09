@@ -19,19 +19,19 @@ const Header = (props) => {
             <div className={c.frame}>
                 <Link to="/find" className={c.header_btn}>
                     <span>
-                      <img src={search} alt={""}/>
+                      <img className={c.icn} src={search} alt={""}/>
                     </span>
                     НАЙТИ ОБРАЗ
                 </Link>
                 <Link to="/create" className={c.header_btn}>
                     <span>
-                      <img src={plus} alt={""}/>
+                      <img className={c.icn} src={plus} alt={""}/>
                     </span>
                     СОЗДАТЬ ОБРАЗ
                 </Link>
                 <Link to="profile" className={c.header_btn}>
                     <span>
-                      <img src={user} alt={""}/>
+                      <img className={c.icn} src={user} alt={""}/>
                     </span>
                     МОЯ СТРАНИЦА
                 </Link>

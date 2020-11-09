@@ -9,10 +9,15 @@
     font-size: 30px;
     color: #C48A69;
     text-decoration: none;
+    outline: none;
 }
 
 .LOGO span {
     color: rgba(196, 138, 105, 0.6);
+}
+
+.LOGO:focus {
+    background-color: rgba(112, 93, 82, 0.2);
 }
 
 .icon {
@@ -74,6 +79,7 @@
     font-size: 15px;
 }
 
+
 .form_btn {
     position: absolute;
     background-color: #C48A69;
@@ -88,7 +94,7 @@
     text-align: center;
 }
 
-.form_btn:active{
+.form_btn:focus, .form_btn:active, .form_btn:hover {
     background-color: #a96d4a;
 }
 
@@ -109,6 +115,11 @@
     height: 20px;
     text-align: right;
     color: black;
+}
+
+.register:focus , .forget_pass:focus {
+    outline: none;
+    background-color: rgba(112, 93, 82, 0.2);
 }
 
 .error {

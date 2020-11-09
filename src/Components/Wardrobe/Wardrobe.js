@@ -1,6 +1,7 @@
 import React from "react";
 import c from "./Wardrobe.module.css";
 import Header from "../Header/Header";
+import withAuthRedirect from "../../HOC/withAuthRedirect";
 import img1 from "../../assets/image/Wardrobe/img1.jpg";
 import img2 from "../../assets/image/Wardrobe/img2.jpg";
 import img3 from "../../assets/image/Wardrobe/img3.jpg";
@@ -93,4 +94,4 @@ const Wardrobe = (props) => {
     )
 }
 
-export default Wardrobe;
+export default withAuthRedirect(Wardrobe);

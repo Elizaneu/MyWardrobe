@@ -2,6 +2,7 @@ import React from "react";
 import c from "./Add.module.css";
 import Header from "../Header/Header";
 import logo from "../../assets/image/logo.svg";
+import withAuthRedirect from "../../HOC/withAuthRedirect";
 
 const Add = (props) => {
     return (
@@ -26,4 +27,4 @@ const Add = (props) => {
     )
 }
 
-export default Add;
+export default withAuthRedirect(Add);

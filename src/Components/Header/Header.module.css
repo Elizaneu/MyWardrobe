@@ -4,11 +4,17 @@
     font-size: 30px;
     color: #C48A69;
     text-decoration: none;
+    outline: none;
 }
 
 .LOGO span {
     color: rgba(196, 138, 105, 0.6);
 }
+
+.LOGO:focus {
+    background-color: rgba(112, 93, 82, 0.2);
+}
+
 
 .exit_btn {
     position: absolute;
@@ -23,9 +29,14 @@
     color: black;
     cursor: pointer;
     text-decoration: none;
+    outline: none;
 }
 
-.exit_btn:active {
+.icn {
+    margin-right: 5px;
+}
+
+.exit_btn:active, .exit_btn:hover, .exit_btn:focus {
     background-color: #a96d4a;
 }
 
@@ -43,13 +54,19 @@
     font-size: 15px;
     text-align: center;
     margin: 10px 30px;
-    display: grid;
+    display: flex;
+    /*display: grid;
     grid-template-columns:1fr 100% ;
-    grid-gap: 2px;
+    grid-gap: 2px;*/
     color: black;
     text-decoration: none;
+    outline: none;
+
 }
 
+.header_btn:focus {
+    background-color: rgba(112, 93, 82, 0.2);
+}
 
 .exit_btn, .header_btn:hover {
     cursor: pointer;

@@ -9,6 +9,11 @@
     font-size: 30px;
     color: #C48A69;
     text-decoration: none;
+    outline: none;
+}
+
+.LOGO:focus {
+    background-color: rgba(112, 93, 82, 0.2);
 }
 
 .LOGO span {
@@ -88,11 +93,7 @@
     text-align: center;
 }
 
-.form_btn:hover {
-    cursor: pointer;
-}
-
-.form_btn:active {
+.form_btn:focus, .form_btn:active, .form_btn:hover {
     background-color: #a96d4a;
 }
 
@@ -105,6 +106,11 @@
     text-align: left;
     font-size: 15px;
     color: black;
+}
+
+.account:focus {
+    outline: none;
+    background-color: rgba(112, 93, 82, 0.2);
 }
 
 .error {

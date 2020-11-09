@@ -11,16 +11,16 @@ import {confirmAlert} from "react-confirm-alert";
 import "./Confirm.css"
 import Input from "../common/Input/Input";
 
-const AuthForm = reduxForm({form: "auth"})(({handleSubmit}) => {
+const AuthForm = reduxForm({form: "auth"})((props) => {
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={props.handleSubmit}>
             <img className={c.icon} src={logo} alt={""}/>
             <div className={c.title}>
                 Авторизация
             </div>
             <div className={c.email_borders}>
                 <img src={user} className={c.up_image} alt={""}/>
-                <Field component={Input}
+                <Field component="input"
                        name="Email"
                        type="email"
                        className={c.borders}
@@ -28,7 +28,7 @@ const AuthForm = reduxForm({form: "auth"})(({handleSubmit}) => {
             </div>
             <div className={c.password_borders}>
                 <img src={password} className={c.up_image} alt={""}/>
-                <Field component={Input}
+                <Field component="input"
                        name="Password"
                        type="password"
                        className={c.borders}
@@ -62,7 +62,6 @@ class Auth extends React.Component {
     componentDidMount() {
         if (this.props.isCreated) {
             confirmAlert(this.alertSetting)
-            debugger
             this.props.setCreate(false);
         }
     }
@@ -70,7 +69,6 @@ class Auth extends React.Component {
     componentDidUpdate(prevProps, prevState, snapshot) {
         if (this.props.isCreated) {
             confirmAlert(this.alertSetting)
-            debugger
             this.props.setCreate(false);
         }
     }

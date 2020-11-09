@@ -9,6 +9,7 @@ import img4 from "../../assets/image/Gallery/img4.jpg";
 import img5 from "../../assets/image/Gallery/img5.jpg";
 import img6 from "../../assets/image/Gallery/img6.jpg";
 import logo from "../../assets/image/logo.svg";
+import {Link} from "react-router-dom";
 
 const Profile = (props) => {
     return (
@@ -19,18 +20,18 @@ const Profile = (props) => {
                     Екатерина Иванова
                 </p>
                 <div className={c.menu}>
-                    <span className={c.menu_btn}>
+                    <Link to={'/wardrobe'} className={c.menu_btn}>
                         Мой гардероб
-                    </span>
-                    <span className={c.menu_btn}>
+                    </Link>
+                    <Link  to={'/outfits'} className={c.menu_btn}>
                         Мои образы
-                    </span>
-                    <span className={c.menu_btn}>
+                    </Link>
+                    <Link to={'/favourites'} className={c.menu_btn}>
                         Избранное
-                    </span>
-                    <span className={c.menu_btn}>
+                    </Link>
+                    <Link to={'/settings'} className={c.menu_btn}>
                         Настройки
-                    </span>
+                    </Link>
                 </div>
                 <p className={c.main_text}>
                     Твои лучшие образы по мнению других пользователей
