@@ -13,7 +13,7 @@ const cors = require('cors');
 //import functions
 const {createUser, getUser, deleteUser, editUser} = require("./User");
 const {isAuth, login, logout} = require("./Auth");
-const {createThing} = require("./Thing");
+const {getThings, createThing} = require("./Thing");
 
 //connect to mysql serv
 const mysqlConn = mysql.createConnection({
@@ -26,7 +26,7 @@ const mysqlConn = mysql.createConnection({
 //options
 const corsOptions = {
     credentials: true, // This is important.
-    origin: "*",
+    origin: "http://localhost:3000",
     methods: ["POST", "GET", "PUT", "DELETE", "OPTIONS"],
     headers: ["X-Requested-With", "content-type"]
 };
@@ -50,6 +50,7 @@ serv.post("/auth/", login(mysqlConn));
 serv.delete("/auth/", logout(mysqlConn));
 
 //ThingAPI
+serv.get("/thing/", getThings(mysqlConn));
 serv.post("/thing/", createThing(mysqlConn));
 
 mysqlConn.connect(err =>{
