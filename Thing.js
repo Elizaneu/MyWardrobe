@@ -59,3 +59,26 @@ exports.createThing = (mysql) => async (req, res) =>{
             res.status(201).json({isCreated: true})
         })
 };
+
+exports.deleteThing = (mysql) => async (req, res) =>{
+    if (!await auth(mysql, req.cookies.token)) {
+        res.sendStatus(401);
+        return;
+    }
+    const id = decode(req.cookies.token);
+
+    let thingId = req.params.id;
+
+    mysql.query(`DELETE FROM thing WHERE UserID = ${id} and idThing = ${thingId}`,
+        (error, result) => {
+            if (error)
+                res.status(500).json({
+                    isDeleted: false,
+                    error: error.sqlMessage
+                });
+            else
+                res.json({
+                    isDeleted: true
+                });
+        });
+};

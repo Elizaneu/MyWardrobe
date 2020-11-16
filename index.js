@@ -13,7 +13,7 @@ const cors = require('cors');
 //import functions
 const {createUser, getUser, deleteUser, editUser} = require("./User");
 const {isAuth, login, logout} = require("./Auth");
-const {getThings, createThing} = require("./Thing");
+const {getThings, createThing, deleteThing} = require("./Thing");
 
 //connect to mysql serv
 const mysqlConn = mysql.createConnection({
@@ -52,6 +52,7 @@ serv.delete("/auth/", logout(mysqlConn));
 //ThingAPI
 serv.get("/thing/", getThings(mysqlConn));
 serv.post("/thing/", createThing(mysqlConn));
+serv.delete("/thing/:id", deleteThing(mysqlConn));
 
 mysqlConn.connect(err =>{
     if (err){
