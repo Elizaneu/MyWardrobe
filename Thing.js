@@ -6,8 +6,22 @@ exports.getThings = (mysql) => async (req, res) => {
         return;
     }
     const id = decode(req.cookies.token);
+    let limit = 10;
+    let offset = 0;
+    let category = "";
 
-    mysql.query(`SELECT * FROM thing WHERE UserID=${id};`,
+    if (req.query.category != null) {category = req.query.category;}
+    if (req.query.limit != null) {limit = req.query.limit;}
+    if (req.query.offset != null) {offset = req.query.offset;}
+
+
+    let query = `SELECT * FROM thing WHERE UserID=${id} LIMIT ${limit} OFFSET ${offset}`;
+    if (category !== ""){
+        query = `SELECT * FROM thing WHERE UserID=${id} AND Category='${category}' LIMIT ${limit} OFFSET ${offset}`;
+    }
+
+
+    mysql.query(query,
         (error, result)=>{
             if (error) {
                 res.status(500).json({
