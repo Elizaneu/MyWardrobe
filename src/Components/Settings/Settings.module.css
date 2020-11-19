@@ -15,6 +15,7 @@
     color: white;
     text-shadow: #C48A69 0.5px 0.5px 0, #C48A69 -0.5px -0.5px 0,
     #C48A69 -0.5px 0.5px 0, #C48A69 0.5px -0.5px 0;
+    cursor: default;
 }
 
 .form_p {
@@ -33,9 +34,14 @@
     left: 120px;
     height: 30px;
     outline: none;
-    border-radius: 10px;
+    border-radius: 6px;
     font-size: 20px;
     top: 25px;
+    cursor: pointer;
+}
+
+.form_btn:active, .form_btn:hover, .form_btn:focus {
+    background-color: #a96d4a;
 }
 
 .form_input {
@@ -62,9 +68,25 @@
 
 .delete {
     position: absolute;
-    top: 310px;
+    top: 410px;
     width: 130px;
-    left: 120px;
+    left: calc(50% - 80px);
     text-align: left;
     color: black;
+    cursor: pointer;
+}
+
+.delete:hover {
+    color: red;
+}
+
+.errorField {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.error {
+    position: relative;
+    text-align: center;
+    font-size: 20px;
+    color: darkred;
 }

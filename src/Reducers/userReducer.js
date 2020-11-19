@@ -1,13 +1,15 @@
-import {getAuth, login, logout, register} from "../API/UserAPI";
+import {deleteUser, editUser, getAuth, getUser, login, logout, register} from "../API/UserAPI";
 
 const SET_AUTH = "SET_AUTH_USER_REDUCER"
 const SET_CREATE = "SET_CREATE_USER_REDUCER"
 const SET_MESSAGE = "SET_MESSAGE_USER_REDUCER"
 const SET_CURRENT_USER = "SET_CURRENT_USER_REDUCER"
+const SET_UPDATE = "SET_UPDATE_USER_REDUCER"
 
 const initialState = {
-    isAuth: false,
+    isAuth: true,
     isCreated: false,
+    isEdited: false,
     message: "",
     currentUser: {}
 }
@@ -34,15 +36,21 @@ const userReducer = (state = initialState, action) => {
                 ...state,
                 currentUser: action.currentUser
             }
+        case SET_UPDATE:
+            return {
+                ...state,
+                isEdited: action.isEdited
+            }
         default:
             return state
     }
 }
 
-const setAuth = (isAuth) => ({type: SET_AUTH, isAuth})
-const setMessage = (message) => ({type: SET_MESSAGE, message})
-const setCurrentUser = (currentUser) => ({type: SET_CURRENT_USER, currentUser})
+export const setAuth = (isAuth) => ({type: SET_AUTH, isAuth})
+export const setMessage = (message) => ({type: SET_MESSAGE, message})
+export const setCurrentUser = (currentUser) => ({type: SET_CURRENT_USER, currentUser})
 export const setCreate = (isCreated) => ({type: SET_CREATE, isCreated})
+export const setUpdate = (isEdited) => ({type: SET_UPDATE, isEdited})
 
 export const Login = (Email, Password, rememberMe) => async (dispatch) => {
     let data = await login(Email, Password, rememberMe);
@@ -101,8 +109,40 @@ export const Register = (LastName, FirstName, Email, Password) => async (dispatc
             dispatch(setMessage(""))
         }, 1000);
     }
+}
 
+export const DeleteUser = () => async (dispatch) => {
+    let data = await deleteUser();
 
+    if (!data.isDeleted) {
+        dispatch(setMessage(data.error));
+        setTimeout(() => {
+            dispatch(setMessage(""))
+        }, 1000);
+    }
+    else {
+        dispatch(setAuth(false))
+
+        dispatch(setCurrentUser(undefined))
+    }
+}
+
+export const EditUser = (LastName = undefined,
+                         FirstName = undefined,
+                         Email = undefined,
+                         Password = undefined) => async (dispatch) => {
+    let data = await editUser(LastName, FirstName, Email, Password);
+    if (!data.isEdited) {
+        dispatch(setMessage(data.error));
+        setTimeout(() => {
+            dispatch(setMessage(""))
+        }, 1000);
+    }
+    else {
+        dispatch(setUpdate(data.isEdited))
+        let user = await getUser()
+        dispatch(setCurrentUser(user))
+    }
 }
 
 export default userReducer

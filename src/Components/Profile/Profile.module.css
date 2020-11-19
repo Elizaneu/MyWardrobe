@@ -30,6 +30,12 @@
     border-radius: 6px;
     text-align: center;
     background-color: white;
+    text-decoration: none;
+    color: black;
+}
+
+.menu_btn:hover, .menu_btn:focus, .menu_btn:active {
+    background-color: #f6e5dc;
 }
 
 .main_text {

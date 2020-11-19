@@ -5,6 +5,11 @@ import logo from "../../assets/image/logo.svg";
 import {Field, reduxForm} from "redux-form";
 import {Register} from "../../Reducers/userReducer";
 import {connect} from "react-redux";
+import {require, maxLength, minLength} from "../../Validate/validators";
+import Input from "../common/Input/Input";
+
+const maxLength30 = maxLength(30);
+const minLength8 = minLength(8);
 
 
 const RegisterForm = reduxForm({form: "reg"})((props) => {
@@ -12,25 +17,34 @@ const RegisterForm = reduxForm({form: "reg"})((props) => {
         <form onSubmit={props.handleSubmit}>
             <img className={c.icon} src={logo} alt={""}/>
             <div className={c.title}>Регистрация</div>
-            <Field component="input"
+            <div className={c.form_input}>
+            <Field component={Input}
+                   errorclassname={c.errorField}
                    name="LastName"
                    type="text"
-                   className={c.surname + " " + c.borders}
+                   validate={[require, maxLength30]}
+                   className={c.borders}
                    placeholder="Фамилия"/>
-            <Field component="input"
+            <Field component={Input}
+                   errorclassname={c.errorField}
                    name="FirstName"
                    type="text"
-                   className={c.firstname + " " + c.borders}
+                   validate={[require, maxLength30]}
+                   className={c.borders}
                    placeholder="Имя"/>
-            <Field component="input"
+            <Field component={Input}
+                   errorclassname={c.errorField}
                    name="Email"
                    type="email"
-                   className={c.email + " " + c.borders}
+                   validate={require}
+                   className={c.borders}
                    placeholder="Электронная почта"/>
-            <Field component="input"
+            <Field component={Input}
+                   errorclassname={c.errorField}
                    name="Password"
                    type="password"
-                   className={c.password + " " + c.borders}
+                   validate={[require, minLength8]}
+                   className={c.borders}
                    placeholder="Пароль"/>
             <button className={c.form_btn}
                     type="submit">
@@ -39,6 +53,7 @@ const RegisterForm = reduxForm({form: "reg"})((props) => {
             <Link className={c.account} to={"/auth"}>
                 Уже есть аккаунт?
             </Link>
+            </div>
         </form>
     )
 })
@@ -75,4 +90,3 @@ const mapStateToProps = (state) => ({
 
 
 export default connect(mapStateToProps, {Register})(Reg);
-

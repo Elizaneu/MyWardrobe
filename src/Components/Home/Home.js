@@ -47,7 +47,7 @@ const Home = (props) => {
                 </div>
                 <div className={c.gallery}>
                     {
-                        Gallery.map(u => <img className={c.gallery_img} src={u.photo} alt=""/>)
+                        Gallery.map(u => <img className={c.gallery_img} src={u.photo} alt="" key={u.photo}/>)
                     }
                 </div>
             </div>

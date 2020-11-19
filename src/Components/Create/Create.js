@@ -16,6 +16,7 @@ import img9 from "../../assets/image/Wardrobe/img9.jpg";
 import img10 from "../../assets/image/Wardrobe/img10.jpg";
 import img11 from "../../assets/image/Wardrobe/img11.jpg";
 import img12 from "../../assets/image/Wardrobe/img12.jpg";
+import {Link} from "react-router-dom";
 
 const Create = (props) => {
     return (
@@ -84,16 +85,16 @@ const Create = (props) => {
                             <span className={c.button}>Бижутерия</span>
                             <span className={c.button}>Шарфы</span>
                         </div>
-                        <span className={c.button}>
+                        <Link to={"/add"} className={c.button}>
                         <span>
                            <img className={c.button_icon} src={plus} alt={""}/>
                         </span>
                         Добавить новый элемент
-                    </span>
+                    </Link>
                     </div>
                 </div>
             </div>
-            <div>
+            <div className={c.second}>
                 <div className={c.category}>
                     <div className={c.categoryItem_list}>
                     <span className={c.button}>
@@ -102,12 +103,12 @@ const Create = (props) => {
                         </span>
                         Назад
                     </span>
-                        <span className={c.button}>
+                        <Link to={"/add"} className={c.button}>
                         <span>
                            <img className={c.button_icon} src={plus} alt={""}/>
                         </span>
                           Добавить новый элемент
-                        </span>
+                        </Link>
                     </div>
                     <span className={c.categoryButton}>
                         Свитеры и кардиганы

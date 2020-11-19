@@ -47,7 +47,6 @@
     background-color: rgba(196, 138, 105, 0);
     outline: none;
     border: none;
-    border-bottom: 1px solid black;
 }
 
 .up_image {
@@ -107,6 +106,10 @@
     color: black;
 }
 
+.errorField {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
 .forget_pass {
     position: absolute;
     top: 270px;
@@ -128,3 +131,4 @@
     font-size: 20px;
     color: darkred;
 }
+

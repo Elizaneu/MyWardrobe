@@ -1,4 +1,5 @@
 import React from "react";
+import c from "./Input.module.css"
 
 export const Input = ({input, meta, ...props}) => {
     const isError = meta.touched && meta.error;
@@ -10,9 +11,11 @@ export const Input = ({input, meta, ...props}) => {
                           ? ("" + ' ' + props.className + ' ' + props.errorclassname)
                           : props.className}/>
             </div>
-            {isError ? <span className={""}>
-{meta.error}
-</span> : <></>}
+            {isError
+                ? <span className={c.errorMessage}>
+                    {meta.error}
+                  </span>
+                : <></>}
         </div>
     )
 };

@@ -40,37 +40,17 @@
 }
 
 .borders {
-    position: absolute;
+    margin-top: 5px;
+    margin-bottom: 5px;
     background-color: rgba(196, 138, 105, 0);
     outline: none;
     border: none;
     border-bottom: 1px solid black;
-}
-
-.surname, .firstname {
-    width: 100px;
-    top: 120px;
-}
-
-.surname {
-    left: 90px;
-}
-
-.firstname {
-    left: 210px;
-}
-
-.email, .password {
     width: 220px;
-    left: 90px;
 }
 
-.email {
-    top: 160px;
-}
-
-.password {
-    top: 200px;
+.errorField {
+    background-color: rgba(255, 0, 0, 0.1);
 }
 
 ::placeholder {
@@ -80,17 +60,26 @@
 
 
 .form_btn {
-    position: absolute;
+    /*position: absolute;*/
     background-color: #C48A69;
     border: none;
     width: 220px;
     left: calc(50% - 220px / 2);
     height: 40px;
     outline: none;
-    top: 240px;
-    border-radius: 10px;
+    /*top: 240px;*/
+    margin-top: 10px;
+    border-radius: 6px;
     font-size: 20px;
     text-align: center;
+}
+
+.form_input {
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(196, 138, 105, 0);
+    margin-left: 90px;
+    margin-top: 20px;
 }
 
 .form_btn:focus, .form_btn:active, .form_btn:hover {
@@ -99,13 +88,11 @@
 
 .account {
     border: none;
-    position: absolute;
-    top: 290px;
-    left: 90px;
     width: 130px;
     text-align: left;
     font-size: 15px;
     color: black;
+    margin-top: 10px;
 }
 
 .account:focus {

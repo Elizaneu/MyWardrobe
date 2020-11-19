@@ -1,11 +1,20 @@
 export const maxLength = (maxLength) => (data) => {
-    if (data && data.length > maxLength)
-        return `Максимальная длина ${maxLength}`
-    else
+    if(!data) return undefined
+    if (data.length <= maxLength)
         return undefined
+    else
+        return `Максимальная длина ${maxLength} символов`
+}
+
+export const minLength = (minLength) => (data) => {
+    if (!data) return undefined
+    if (data.length >= minLength)
+        return undefined
+    else
+        return `Минимальная длина ${minLength} символов`
 }
 
 export const require = data => {
-    return undefined
+    if (data && data.length > 0) return undefined
     return "Поле не может быть пустым"
 }

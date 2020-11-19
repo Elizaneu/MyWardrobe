@@ -22,3 +22,16 @@ export const logout = () => {
 export const register = (LastName, FirstName, Email, Password) => {
     return ms.post('/user/', {LastName, FirstName, Email, Password}).then(res=>res.data);
 }
+
+export const deleteUser = (id="") => {
+    return ms.delete('/user/'+id).then(res=>res.data)
+}
+
+export const editUser = (LastName = undefined, FirstName = undefined,
+                         Email = undefined, Password = undefined) => {
+    return ms.put('/user/', {LastName, FirstName, Email, Password}).then(res=>res.data)
+}
+
+export const getUser = (id = "") => {
+    return ms.get('/user/'+id).then(res=>res.data)
+}
