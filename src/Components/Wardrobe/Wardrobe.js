@@ -26,7 +26,7 @@ class Wardrobe extends React.Component {
     onChangeValue = async (e) => {
         this.setState({option: e.target.value})
         this.setState({block: true})
-        let data = await getThing(this.state.option);
+        let data = await getThing(e.target.value);
         this.setState({Photos: data.map(d => ({...d, delete: false}))})
         this.setState({block: false})
     }
