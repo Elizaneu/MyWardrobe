@@ -23,6 +23,19 @@
     color: black;
 }
 
+.button:focus, .button:active, .button:hover {
+    background-color: #f6e5dc;
+}
+
+.button_disabled {
+    background-color: #e0dfdf;
+    color: grey;
+    cursor: default;
+}
+
+.button_disabled:hover, .button_disabled:focus {
+    background-color: #e0dfdf;
+}
 .mainFrame_topButton {
     position: absolute;
     display: flex;

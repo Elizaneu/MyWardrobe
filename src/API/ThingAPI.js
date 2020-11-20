@@ -19,8 +19,8 @@ export const createThing = (Photo, Category) => {
             }}).then(res=>res.data)
 }
 
-export const getThing = (Category) => {
-    return ms.get(`/thing/?category=${Category}`).then(res=>res.data)
+export const getThing = (Category, Offset = 0, Limit = 12) => {
+    return ms.get(`/thing/?category=${Category}&offset=${Offset}&limit=${Limit}`).then(res=>res.data)
 }
 
 export const deleteThing = (idThing) => {

@@ -12,7 +12,8 @@ class Wardrobe extends React.Component {
         option: Categories[0].option,
         Photos: [],
         block: false,
-        editMod: false
+        editMod: false,
+        page: 0
     }
 
 
@@ -53,12 +54,22 @@ class Wardrobe extends React.Component {
                 if (photo.delete)
                     deleteThing(photo.idThing)
             })
-            this.setState({Photos: this.state.Photos.filter((photo) => {
-                return !photo.delete
-                })})
+            this.setState({
+                Photos: this.state.Photos.filter((photo) => {
+                    return !photo.delete
+                })
+            })
         }
         this.setState({editMod: !this.state.editMod})
     }
+
+    changePage = (page) => async () => {
+        if (page >= 0) {
+            this.setState({page, block: true});
+            let data = await getThing(this.state.option, page * 12);
+            this.setState({block: false, Photos: data.map(d => ({...d, delete: false}))});
+        }
+    };
 
     render() {
         return (
@@ -79,8 +90,8 @@ class Wardrobe extends React.Component {
                     <span>
                         <img className={c.button_icon} src={plus} alt={""}/>
                     </span>
-                    Добавить новый элемент
-                </Link>
+                            Добавить новый элемент
+                        </Link>
                     </div>
                     <span onClick={this.buttonDelete}
                           className={c.button + " " + c.mainFrame_topButton + " " + c.mainFrame_topButton__right}>
@@ -88,21 +99,28 @@ class Wardrobe extends React.Component {
                     </span>
                     <div className={c.mainFrame_gallery}>
                         {this.state.Photos.map(u => <img
+                            key={u.idThing}
                             className={u.delete ? c.onDelete + " " + c.mainFrame_gallery_img : c.mainFrame_gallery_img}
                             src={"data:image/png;base64," + u.Photo}
                             onClick={this.chooseForDelete(u.idThing)}
                             alt=""/>)}
                     </div>
                     <div className={c.mainFrame_bottomButtonsLeft}>
-                    <span className={c.button}>
+                    <span className={this.state.block || this.state.page === 0
+                            ? c.button + " " + c.button_disabled
+                            : c.button}
+                          onClick={this.changePage(0)}>
                         В начало
                     </span>
-                        <span className={c.button}>
+                        <span onClick={this.changePage(this.state.page - 1)}
+                              className={this.state.block || this.state.page === 0
+                                  ? c.button + " " + c.button_disabled
+                                  : c.button}>
                         Предыдущая
                     </span>
                     </div>
                     <div className={c.mainFrame_bottomButtonsRight}>
-                    <span className={c.button}>
+                    <span onClick={this.changePage(this.state.page + 1)} className={c.button}>
                         Следующая
                     </span>
                         <span className={c.button}>
