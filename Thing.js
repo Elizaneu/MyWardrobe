@@ -40,9 +40,9 @@ exports.getThings = (mysql) => async (req, res) => {
                 });
                 return;
             }
-            const row = result.map(u => ({...u, Photo: u.Photo.toString('base64')}));
+            const rows = result.map(u => ({...u, Photo: u.Photo.toString('base64')}));
 
-            res.send({count:result1[0]['count(*)'],  row});
+            res.send({count:result1[0]['count(*)'],  rows});
         })
     });
 };
