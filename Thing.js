@@ -10,42 +10,52 @@ exports.getThings = (mysql) => async (req, res) => {
     let offset = 0;
     let category = "";
 
-    if (req.query.category != null) {category = req.query.category;}
-    if (req.query.limit != null) {limit = req.query.limit;}
-    if (req.query.offset != null) {offset = req.query.offset;}
-
-
-    let query = `SELECT * FROM thing WHERE UserID=${id} LIMIT ${limit} OFFSET ${offset}`;
-    if (category !== ""){
-        query = `SELECT * FROM thing WHERE UserID=${id} AND Category='${category}' LIMIT ${limit} OFFSET ${offset}`;
+    if (req.query.category != null) {
+        category = req.query.category;
+    }
+    if (req.query.limit != null) {
+        limit = req.query.limit;
+    }
+    if (req.query.offset != null) {
+        offset = req.query.offset;
     }
 
-
-    mysql.query(query,
-        (error, result)=>{
+    let query1 = `SELECT count(*) FROM thing WHERE UserID=${id}`;
+    let query = `SELECT * FROM thing WHERE UserID=${id} LIMIT ${limit} OFFSET ${offset}`;
+    if (category !== "") {
+        query1 = `SELECT count(*) FROM thing WHERE UserID=${id} AND Category='${category}'`;
+        query = `SELECT * FROM thing WHERE UserID=${id} AND Category='${category}' LIMIT ${limit} OFFSET ${offset}`;
+    }
+    mysql.query(query1, (error1, result1) => {
+        if (error1) {
+            res.status(500).json({
+                error: error1.sqlMessage
+            });
+            return;
+        }
+        mysql.query(query, (error, result) => {
             if (error) {
                 res.status(500).json({
                     error: error.sqlMessage
                 });
                 return;
             }
-            const r = result.map(u=>({...u, Photo:u.Photo.toString('base64')}))
+            const row = result.map(u => ({...u, Photo: u.Photo.toString('base64')}));
 
-            res.send(r);
+            res.send({count:result1[0]['count(*)'],  row});
         })
+    });
 };
 
 
-
-
-exports.createThing = (mysql) => async (req, res) =>{
+exports.createThing = (mysql) => async (req, res) => {
     if (!await auth(mysql, req.cookies.token)) {
         res.sendStatus(401);
         return;
     }
     const id = decode(req.cookies.token);
 
-    if (!req.files.Photo || !req.body.Category){
+    if (!req.files.Photo || !req.body.Category) {
         res.status(400).json({
             isCreated: false,
             error: "not all fields are filled in"
@@ -59,9 +69,9 @@ exports.createThing = (mysql) => async (req, res) =>{
             Category: req.body.Category,
             Photo: file.data,
             PhotoLink: "#",
-            UserID:id
+            UserID: id
         };
-    mysql.query(query,values,
+    mysql.query(query, values,
         (error, result) => {
             if (error) {
                 res.status(400).json({
@@ -74,7 +84,7 @@ exports.createThing = (mysql) => async (req, res) =>{
         })
 };
 
-exports.deleteThing = (mysql) => async (req, res) =>{
+exports.deleteThing = (mysql) => async (req, res) => {
     if (!await auth(mysql, req.cookies.token)) {
         res.sendStatus(401);
         return;
