@@ -9,10 +9,11 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 //import functions
-const {createUser, getUser, deleteUser, editUser} = require("./User");
-const {isAuth, login, logout} = require("./Auth");
-const {getThings, createThing, deleteThing} = require("./Thing");
-const {getCollages, createCollage, deleteCollage} = require("./Collage");
+const {createUser, getUser, deleteUser, editUser} = require("./src/User");
+const {isAuth, login, logout} = require("./src/Auth");
+const {getThings, createThing, deleteThing} = require("./src/Thing");
+const {getCollages, createCollage, deleteCollage} = require("./src/Collage");
+
 
 //connect to mysql serv
 const mysqlConn = mysql.createConnection({
@@ -21,6 +22,7 @@ const mysqlConn = mysql.createConnection({
     database:"wardrobedb",
     password:"Lama1200"
 });
+exports.mysql = mysqlConn;
 
 //Server options
 const corsOptions = {
@@ -38,20 +40,20 @@ serv.use(fileUpload({
 }));
 
 //UserAPI
-serv.get("/user/:id?", getUser(mysqlConn));
-serv.post("/user/", createUser(mysqlConn));
-serv.delete("/user/:id?", deleteUser(mysqlConn));
-serv.put("/user/", editUser(mysqlConn));
+serv.get("/user/:id?", getUser);
+serv.post("/user/", createUser);
+serv.delete("/user/:id?", deleteUser);
+serv.put("/user/", editUser);
 
 //AuthAPI
-serv.get("/auth/", isAuth(mysqlConn));
-serv.post("/auth/", login(mysqlConn));
-serv.delete("/auth/", logout(mysqlConn));
+serv.get("/auth/", isAuth);
+serv.post("/auth/", login);
+serv.delete("/auth/", logout);
 
 //ThingAPI
-serv.get("/thing/", getThings(mysqlConn));
-serv.post("/thing/", createThing(mysqlConn));
-serv.delete("/thing/:id", deleteThing(mysqlConn));
+serv.get("/thing/", getThings);
+serv.post("/thing/", createThing);
+serv.delete("/thing/:id", deleteThing);
 
 //CollageAPI
 serv.get("/collage/", getCollages(mysqlConn));
