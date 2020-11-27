@@ -1,4 +1,4 @@
-const {getCollages, createCollage} = require("../DB_requests/CollageRequests");
+const {getCountCollages, getCollages, createCollage, addThingToCollage} = require("../DB_requests/CollageRequests");
 const {decode, auth} = require("./Hash");
 
 exports.getCollages = async (req, res) =>{
@@ -16,9 +16,10 @@ exports.getCollages = async (req, res) =>{
     if (req.query.offset != null) {offset = req.query.offset;}
 
     try{
+        let count = await getCountCollages(id, style, season, dresscode);
         let data = await getCollages(id, style, season, dresscode, limit, offset);
         const rows = data.map(u => ({...u, Photo: u.Photo.toString('base64')}));
-        res.json([...rows]);
+        res.json({count, rows});
     }catch (e) {
         res.status(500).json({
             error: e.sqlMessage
@@ -52,7 +53,12 @@ exports.createCollage = async (req, res) =>{
     const file = req.files.Photo;
 
     try {
-        await createCollage(id, req.body.Style, req.body.Dresscode, req.body.Season, file.data, "#");
+        let data = await createCollage(id, req.body.Style, req.body.Dresscode, req.body.Season, file.data, "#");
+
+        for (const id of JSON.parse(req.body.Things)) {
+           await addThingToCollage(data.insertId, id);
+        }
+
         res.status(201).json({isCreated: true});
     }catch (e) {
         res.status(500).json({
