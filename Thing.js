@@ -42,7 +42,7 @@ exports.getThings = (mysql) => async (req, res) => {
             }
             const rows = result.map(u => ({...u, Photo: u.Photo.toString('base64')}));
 
-            res.send({count:result1[0]['count(*)'],  rows});
+            res.send({count: result1[0]['count(*)'], rows});
         })
     });
 };
@@ -54,11 +54,18 @@ exports.createThing = (mysql) => async (req, res) => {
         return;
     }
     const id = decode(req.cookies.token);
-
-    if (!req.files.Photo || !req.body.Category) {
+    try {
+        if (!req.files.Photo || !req.body.Category) {
+            res.status(400).json({
+                isCreated: false,
+                error: "not all fields are filled in"
+            });
+            return;
+        }
+    } catch (e) {
         res.status(400).json({
             isCreated: false,
-            error: "not all fields are filled in"
+            error: "request type is not form-data"
         });
         return;
     }

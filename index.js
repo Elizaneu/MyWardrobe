@@ -1,10 +1,8 @@
 //import mysql package
-
 const mysql = require("mysql");
 
 //import express package
 const serv = require('express')();
-
 const fileUpload = require('express-fileupload');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
@@ -14,6 +12,7 @@ const cors = require('cors');
 const {createUser, getUser, deleteUser, editUser} = require("./User");
 const {isAuth, login, logout} = require("./Auth");
 const {getThings, createThing, deleteThing} = require("./Thing");
+const {getCollages, createCollage, deleteCollage} = require("./Collage");
 
 //connect to mysql serv
 const mysqlConn = mysql.createConnection({
@@ -23,7 +22,7 @@ const mysqlConn = mysql.createConnection({
     password:"Lama1200"
 });
 
-//options
+//Server options
 const corsOptions = {
     credentials: true, // This is important.
     origin: "http://localhost:3000",
@@ -54,11 +53,19 @@ serv.get("/thing/", getThings(mysqlConn));
 serv.post("/thing/", createThing(mysqlConn));
 serv.delete("/thing/:id", deleteThing(mysqlConn));
 
+//CollageAPI
+serv.get("/collage/", getCollages(mysqlConn));
+serv.post("/collage/", createCollage(mysqlConn));
+serv.delete("/collage/:id", deleteCollage(mysqlConn));
+
+
+//TestConnectToDB
 mysqlConn.connect(err =>{
     if (err){
         console.log(err);
         return err;
     }else{
+//StartServer
         console.log("connect to db is OK");
         serv.listen(8000, () => {
             console.log("server started");
