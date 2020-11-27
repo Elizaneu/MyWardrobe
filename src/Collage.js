@@ -7,7 +7,7 @@ exports.getCollages = async (req, res) =>{
         return;
     }
     const id = decode(req.cookies.token);
-    let limit = 10, offset = 0, style = null, season = null, dresscode = null;
+    let limit = 10, offset = 0, style = "", season = "", dresscode = "";
 
     if (req.query.style != null) {style = req.query.style;}
     if (req.query.season != null) {season = req.query.season;}

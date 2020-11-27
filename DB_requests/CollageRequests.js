@@ -3,9 +3,9 @@ exports.getCountCollages = (id, style, season, dresscode) => {
         const {mysql} = require('./../index');
 
         let query = `SELECT count(*) FROM collage WHERE UserID=${id} AND `+
-            `Style=${style ? `'${style}'` : `Style`} AND ` +
-            `Season=${season ? `'${season}'` : `Season`} AND ` +
-            `Dresscode=${dresscode ? `'${dresscode}'` : `Dresscode`}`;
+            `Style=${style !==""? `'${style}'` : `Style`} AND ` +
+            `Season=${season !==""? `'${season}'` : `Season`} AND ` +
+            `Dresscode=${dresscode !==""? `'${dresscode}'` : `Dresscode`}`;
 
         mysql.query(query, (error, result) => {
             if (error) reject(error);
