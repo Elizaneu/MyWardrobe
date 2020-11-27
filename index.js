@@ -56,9 +56,9 @@ serv.post("/thing/", createThing);
 serv.delete("/thing/:id", deleteThing);
 
 //CollageAPI
-serv.get("/collage/", getCollages(mysqlConn));
-serv.post("/collage/", createCollage(mysqlConn));
-serv.delete("/collage/:id", deleteCollage(mysqlConn));
+serv.get("/collage/", getCollages);
+serv.post("/collage/", createCollage);
+serv.delete("/collage/:id", deleteCollage);
 
 
 //TestConnectToDB
