@@ -50,6 +50,16 @@ exports.createCollage = async (req, res) =>{
         return;
     }
 
+    try {
+        JSON.parse(req.body.Things)
+    }catch (e) {
+        res.status(400).json({
+            isCreated: false,
+            error: "Things is not array"
+        });
+        return;
+    }
+
     const file = req.files.Photo;
 
     try {
