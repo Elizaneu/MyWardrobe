@@ -22,7 +22,7 @@ exports.getCollages = (id, style, season, dresscode, limit, offset) => {
             `Style=${style ? `'${style}'` : `Style`} AND ` +
             `Season=${season ? `'${season}'` : `Season`} AND ` +
             `Dresscode=${dresscode ? `'${dresscode}'` : `Dresscode`} ` +
-            `LIMIT ${limit} OFFSET ${offset}`;
+            `ORDER BY CreationDate DESC LIMIT ${limit} OFFSET ${offset};`;
 
         mysql.query(query,
             (error, result) => {
