@@ -12,7 +12,7 @@ const cors = require('cors');
 const {createUser, getUser, deleteUser, editUser} = require("./src/User");
 const {isAuth, login, logout} = require("./src/Auth");
 const {getThings, createThing, deleteThing} = require("./src/Thing");
-const {getCollages, createCollage, deleteCollage} = require("./src/Collage");
+const {getCollages, createCollage, deleteCollage, getAllCollage} = require("./src/Collage");
 
 
 //connect to mysql serv
@@ -59,6 +59,7 @@ serv.delete("/thing/:id", deleteThing);
 serv.get("/collage/", getCollages);
 serv.post("/collage/", createCollage);
 serv.delete("/collage/:id", deleteCollage);
+serv.get("/collage/all", getAllCollage);
 
 
 //TestConnectToDB

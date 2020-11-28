@@ -73,3 +73,37 @@ exports.deleteCollage = (UserID, CollageID) => {
             })
     });
 };
+
+exports.getCountAllCollages = (style, season, dresscode) => {
+    return new Promise((resolve, reject) => {
+        const {mysql} = require('./../index');
+
+        let query = `SELECT count(*) FROM collage WHERE `+
+            `Style=${style !==""? `'${style}'` : `Style`} AND ` +
+            `Season=${season !==""? `'${season}'` : `Season`} AND ` +
+            `Dresscode=${dresscode !==""? `'${dresscode}'` : `Dresscode`}`;
+
+        mysql.query(query, (error, result) => {
+            if (error) reject(error);
+            resolve(result[0]['count(*)'])
+        })
+    });
+};
+
+exports.getAllCollages = (style, season, dresscode, sort, limit, offset) => {
+    return new Promise((resolve, reject) => {
+        const {mysql} = require('./../index');
+
+        let query = `SELECT * FROM collage WHERE `+
+            `Style=${style ? `'${style}'` : `Style`} AND ` +
+            `Season=${season ? `'${season}'` : `Season`} AND ` +
+            `Dresscode=${dresscode ? `'${dresscode}'` : `Dresscode`} ` +
+            `ORDER BY ${sort} DESC LIMIT ${limit} OFFSET ${offset};`;
+
+        mysql.query(query,
+            (error, result) => {
+                if (error) reject(error);
+                resolve(result)
+            })
+    });
+};
