@@ -36,6 +36,7 @@
 .button_disabled:hover, .button_disabled:focus {
     background-color: #e0dfdf;
 }
+
 .mainFrame_topButton {
     position: absolute;
     display: flex;

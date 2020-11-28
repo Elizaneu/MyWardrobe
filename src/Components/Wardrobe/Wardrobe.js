@@ -6,6 +6,7 @@ import plus from "../../assets/image/Header/plus.svg";
 import {Categories} from "../../Categories";
 import {deleteThing, getThing} from "../../API/ThingAPI";
 import {Link} from "react-router-dom";
+import {confirmAlert} from "react-confirm-alert";
 
 class Wardrobe extends React.Component {
     state = {
@@ -13,23 +14,60 @@ class Wardrobe extends React.Component {
         Photos: [],
         block: false,
         editMod: false,
-        page: 0
+        page: 0,
+        lastPage: 0
     }
 
+
+
+    confirmDeleteMessage = {
+        title: "Удаление элементов",
+        message: "Подтвердите удаление элементов гардероба",
+        buttons: [
+            {
+                label: "Да",
+                onClick: () => {
+                    this.state.Photos.forEach((photo) => {
+                        if (photo.delete)
+                            deleteThing(photo.idThing)
+                    })
+                    this.setState({
+                        Photos: this.state.Photos.filter((photo) => {
+                            return !photo.delete
+                        })
+                    })
+                }
+            },
+            {
+                label: "Нет"
+            }
+        ]
+    }
+
+    alertMessage = {
+        message: "Выберите элементы, которые нужно удалить",
+        buttons: [
+            {
+                label: "Ок"
+            }
+        ]
+    }
 
     async componentDidMount() {
         this.setState({block: true})
         let data = await getThing(this.state.option);
-        this.setState({Photos: data.map(d => ({...d, delete: false}))})
-        this.setState({block: false})
+        this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        this.setState({block: false,
+            lastPage: Math.ceil(data.count / 12 - 1)})
     }
 
     onChangeValue = async (e) => {
         this.setState({option: e.target.value})
         this.setState({block: true})
         let data = await getThing(e.target.value);
-        this.setState({Photos: data.map(d => ({...d, delete: false}))})
-        this.setState({block: false})
+        this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        this.setState({block: false,
+            lastPage: Math.ceil(data.count / 12 - 1)})
     }
 
     chooseForDelete = (photoId) => () => {
@@ -50,24 +88,22 @@ class Wardrobe extends React.Component {
 
     buttonDelete = () => {
         if (this.state.editMod) {
-            this.state.Photos.forEach((photo) => {
-                if (photo.delete)
-                    deleteThing(photo.idThing)
-            })
-            this.setState({
-                Photos: this.state.Photos.filter((photo) => {
-                    return !photo.delete
-                })
-            })
+            confirmAlert(this.confirmDeleteMessage)
+        }
+        if (!this.state.editMod) {
+            confirmAlert(this.alertMessage)
         }
         this.setState({editMod: !this.state.editMod})
     }
 
     changePage = (page) => async () => {
-        if (page >= 0) {
+        if (page >= 0 && page <= this.state.lastPage) {
             this.setState({page, block: true});
             let data = await getThing(this.state.option, page * 12);
-            this.setState({block: false, Photos: data.map(d => ({...d, delete: false}))});
+            this.setState({
+                block: false,
+                Photos: data.map(d => ({...d, delete: false})),
+                lastPage: Math.ceil(data.count / 12 - 1)})
         }
     };
 
@@ -120,10 +156,18 @@ class Wardrobe extends React.Component {
                     </span>
                     </div>
                     <div className={c.mainFrame_bottomButtonsRight}>
-                    <span onClick={this.changePage(this.state.page + 1)} className={c.button}>
+                    <span onClick={this.changePage(this.state.page + 1)}
+                          className={this.state.block || this.state.page === this.state.lastPage
+                              || this.state.lastPage === 0
+                              ? c.button + " " + c.button_disabled
+                              : c.button}>
                         Следующая
                     </span>
-                        <span className={c.button}>
+                        <span onClick={this.changePage(this.state.lastPage)}
+                            className={this.state.block || this.state.page === this.state.lastPage
+                                || this.state.lastPage === 0
+                            ? c.button + " " + c.button_disabled
+                            : c.button}>
                         В конец
                     </span>
                     </div>

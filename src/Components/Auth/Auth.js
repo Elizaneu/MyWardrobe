@@ -87,7 +87,7 @@ export class Auth extends React.Component {
             return <Redirect to="/"/>
         }
         return (
-            <div className={c.Content}>
+            <div className="content" className={c.Content}>
                 <Link className={c.LOGO} to={"/"}>
                     MY<span>WARDROBE</span>
                 </Link>

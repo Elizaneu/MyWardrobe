@@ -13,3 +13,7 @@ form {
     background: rgba(196, 138, 105, 0.6);
     border-radius: 10px;
 }
+
+select {
+    font-size: 15px;
+}

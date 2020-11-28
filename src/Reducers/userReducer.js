@@ -1,10 +1,10 @@
 import {deleteUser, editUser, getAuth, getUser, login, logout, register} from "../API/UserAPI";
 
-const SET_AUTH = "SET_AUTH_USER_REDUCER"
-const SET_CREATE = "SET_CREATE_USER_REDUCER"
-const SET_MESSAGE = "SET_MESSAGE_USER_REDUCER"
-const SET_CURRENT_USER = "SET_CURRENT_USER_REDUCER"
-const SET_UPDATE = "SET_UPDATE_USER_REDUCER"
+export const SET_AUTH = "SET_AUTH_USER_REDUCER"
+export const SET_CREATE = "SET_CREATE_USER_REDUCER"
+export const SET_MESSAGE = "SET_MESSAGE_USER_REDUCER"
+export const SET_CURRENT_USER = "SET_CURRENT_USER_REDUCER"
+export const SET_UPDATE = "SET_UPDATE_USER_REDUCER"
 
 const initialState = {
     isAuth: true,
@@ -53,7 +53,7 @@ export const setCreate = (isCreated) => ({type: SET_CREATE, isCreated})
 export const setUpdate = (isEdited) => ({type: SET_UPDATE, isEdited})
 
 export const Login = (Email, Password, rememberMe) => async (dispatch) => {
-    let data = await login(Email, Password, rememberMe);
+    let data = await login(Email.trim(), Password, rememberMe);
 
     if (!data.isAuth) {
         dispatch(setMessage(data.error))
@@ -94,7 +94,7 @@ export const Logout = () => async (dispatch) => {
 
 export const Register = (LastName, FirstName, Email, Password) => async (dispatch) => {
     try {
-        let data = await register(LastName, FirstName, Email, Password);
+        let data = await register(LastName.trim(), FirstName.trim(), Email.trim(), Password);
 
         if (!data.isCreated) {
             dispatch(setMessage(data.error));

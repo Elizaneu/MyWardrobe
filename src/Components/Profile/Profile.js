@@ -10,20 +10,21 @@ import img5 from "../../assets/image/Gallery/img5.jpg";
 import img6 from "../../assets/image/Gallery/img6.jpg";
 import logo from "../../assets/image/logo.svg";
 import {Link} from "react-router-dom";
+import {connect} from "react-redux";
 
-const Profile = (props) => {
+function Profile(props) {
     return (
         <div>
             <Header/>
             <div className={c.main_frame}>
                 <p className={c.name}>
-                    Екатерина Иванова
+                    {props.curUser.FirstName + " " + props.curUser.LastName}
                 </p>
                 <div className={c.menu}>
                     <Link to={'/wardrobe'} className={c.menu_btn}>
                         Мой гардероб
                     </Link>
-                    <Link  to={'/outfits'} className={c.menu_btn}>
+                    <Link to={'/outfits'} className={c.menu_btn}>
                         Мои образы
                     </Link>
                     <Link to={'/favourites'} className={c.menu_btn}>
@@ -56,4 +57,8 @@ const Profile = (props) => {
     )
 }
 
-export default withAuthRedirect(Profile);
+const mapStateToProps = (state) => ({
+    curUser: state.user.currentUser,
+})
+
+export default connect(mapStateToProps, {})(withAuthRedirect(Profile));

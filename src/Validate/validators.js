@@ -15,6 +15,6 @@ export const minLength = (minLength) => (data) => {
 }
 
 export const require = data => {
-    if (data && data.length > 0) return undefined
+    if (data && data.length > 0 && data.trim() !== '') return undefined
     return "Поле не может быть пустым"
 }
