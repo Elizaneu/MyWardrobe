@@ -1,4 +1,5 @@
-const {getCountCollages, getCollages, createCollage, addThingToCollage} = require("../DB_requests/CollageRequests");
+const {getCountCollages, getCollages, createCollage,
+    addThingToCollage, deleteCollage} = require("../DB_requests/CollageRequests");
 const {decode, auth} = require("./Hash");
 
 exports.getCollages = async (req, res) =>{
@@ -79,5 +80,27 @@ exports.createCollage = async (req, res) =>{
 };
 
 exports.deleteCollage = async (req, res) =>{
+    if (!await auth(req.cookies.token)) {
+        res.sendStatus(401);
+        return;
+    }
+    const id = decode(req.cookies.token);
 
+    let collageId = req.params.id;
+
+    if (!Number(collageId)) {
+        res.sendStatus(400);
+        return;
+    }
+    try {
+        await deleteCollage(id, collageId);
+        res.json({
+            isDeleted: true
+        });
+    }catch (e) {
+        res.status(500).json({
+            isDeleted: false,
+            error: e.sqlMessage
+        });
+    }
 };

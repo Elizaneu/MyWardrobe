@@ -61,3 +61,15 @@ exports.addThingToCollage = (CollageID, ThingID) => {
             })
     });
 };
+
+exports.deleteCollage = (UserID, CollageID) => {
+    return new Promise((resolve, reject) => {
+        const {mysql} = require('./../index');
+
+        mysql.query(`DELETE FROM collage WHERE UserID = ${UserID} and idCollage = ${CollageID}`,
+            (error, result) => {
+                if (error) reject(error);
+                resolve(result)
+            })
+    });
+};
