@@ -71,7 +71,9 @@ exports.deleteThing = async (req, res) => {
     let thingId = req.params.id;
 
     if (!Number(thingId)) {
-        res.sendStatus(400);
+        res.status(400).json({
+            error: "id is not valid"
+        });
         return;
     }
     try {

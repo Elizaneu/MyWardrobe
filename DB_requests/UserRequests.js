@@ -4,7 +4,7 @@ exports.getUser = (id) => {
         mysql.query(`SELECT idUser, LastName, FirstName, Email, RegistrationDate FROM user WHERE idUser = ${id}`,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };
@@ -15,7 +15,7 @@ exports.createUser = (LastName, FirstName, Email, Password) => {
         mysql.query(`INSERT INTO \`user\` (\`LastName\`, \`FirstName\`, \`Email\`, \`Password\`) VALUES ('${LastName}', '${FirstName}', '${Email}', '${Password}');`,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };
@@ -26,7 +26,7 @@ exports.deleteUser = (id) => {
         mysql.query(`DELETE FROM user WHERE idUser = ${id}`,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };
@@ -43,7 +43,7 @@ exports.editUser = (id, LastName, FirstName, Email, Password) => {
         mysql.query(query,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };

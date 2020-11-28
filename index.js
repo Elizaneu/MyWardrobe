@@ -13,7 +13,7 @@ const {createUser, getUser, deleteUser, editUser} = require("./src/User");
 const {isAuth, login, logout} = require("./src/Auth");
 const {getThings, createThing, deleteThing} = require("./src/Thing");
 const {getCollages, createCollage, deleteCollage, getAllCollage} = require("./src/Collage");
-
+const{likeCollage, deleteLikeCollage} = require("./src/LikeCollage");
 
 //connect to mysql serv
 const mysqlConn = mysql.createConnection({
@@ -61,6 +61,9 @@ serv.post("/collage/", createCollage);
 serv.delete("/collage/:id", deleteCollage);
 serv.get("/collage/all", getAllCollage);
 
+//LikeCollageAPI
+serv.get("/like/collage/:id", likeCollage);
+serv.delete("/like/collage/:id", deleteLikeCollage);
 
 //TestConnectToDB
 mysqlConn.connect(err =>{

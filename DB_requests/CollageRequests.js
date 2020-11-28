@@ -9,7 +9,7 @@ exports.getCountCollages = (id, style, season, dresscode) => {
 
         mysql.query(query, (error, result) => {
             if (error) reject(error);
-            resolve(result[0]['count(*)'])
+            else resolve(result[0]['count(*)'])
         })
     });
 };
@@ -27,7 +27,7 @@ exports.getCollages = (id, style, season, dresscode, limit, offset) => {
         mysql.query(query,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };
@@ -42,7 +42,7 @@ exports.createCollage = (UserID, Style, Dresscode, Season, Photo, PhotoLink) => 
         mysql.query(query, values,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };
@@ -57,7 +57,7 @@ exports.addThingToCollage = (CollageID, ThingID) => {
         mysql.query(query, values,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };
@@ -69,7 +69,7 @@ exports.deleteCollage = (UserID, CollageID) => {
         mysql.query(`DELETE FROM collage WHERE UserID = ${UserID} and idCollage = ${CollageID}`,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };
@@ -85,7 +85,7 @@ exports.getCountAllCollages = (style, season, dresscode) => {
 
         mysql.query(query, (error, result) => {
             if (error) reject(error);
-            resolve(result[0]['count(*)'])
+            else resolve(result[0]['count(*)'])
         })
     });
 };
@@ -103,7 +103,7 @@ exports.getAllCollages = (style, season, dresscode, sort, limit, offset) => {
         mysql.query(query,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };
@@ -115,7 +115,7 @@ exports.getThingsInCollage = (idCollage) => {
         mysql.query(`SELECT ThingID FROM things_in_collage WHERE CollageID=${idCollage}`,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result.map(u=>u.ThingID));
+                else resolve(result.map(u => u.ThingID));
             })
     });
 };

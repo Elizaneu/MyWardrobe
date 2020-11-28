@@ -4,7 +4,7 @@ exports.login = (Email, Password) => {
         mysql.query(`SELECT * FROM user WHERE Email = '${Email}' AND Password = '${Password}'`,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };

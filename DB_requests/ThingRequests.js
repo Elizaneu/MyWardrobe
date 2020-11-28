@@ -7,9 +7,9 @@ exports.getCountThings = (id, Category) => {
             query = `SELECT count(*) FROM thing WHERE UserID=${id} AND Category='${Category}'`;
         }
         mysql.query(query, (error, result) => {
-                if (error) reject(error);
-                resolve(result[0]['count(*)'])
-            })
+            if (error) reject(error);
+            else resolve(result[0]['count(*)'])
+        })
     });
 };
 
@@ -22,9 +22,9 @@ exports.getThings = (id, Category, limit, offset) => {
             query = `SELECT * FROM thing WHERE UserID=${id} AND Category='${Category}' LIMIT ${limit} OFFSET ${offset}`;
         }
         mysql.query(query, (error, result) => {
-                if (error) reject(error);
-                resolve(result)
-            })
+            if (error) reject(error);
+            else resolve(result)
+        })
     });
 };
 
@@ -36,9 +36,9 @@ exports.createThing = (Category, Photo, PhotoLink, UserID) => {
             values = {Category, Photo, PhotoLink, UserID};
 
         mysql.query(query, values, (error, result) => {
-                if (error) reject(error);
-                resolve(result)
-            })
+            if (error) reject(error);
+            else resolve(result)
+        })
     });
 };
 
@@ -50,7 +50,7 @@ exports.deleteThing = (UserID, ThingID) => {
         mysql.query(`DELETE FROM thing WHERE UserID = ${UserID} and idThing = ${ThingID}`,
             (error, result) => {
                 if (error) reject(error);
-                resolve(result)
+                else resolve(result)
             })
     });
 };
