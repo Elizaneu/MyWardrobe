@@ -1,6 +1,6 @@
 const {getCountCollages, getCollages, createCollage,
     addThingToCollage, deleteCollage, getCountAllCollages,
-    getAllCollages} = require("../DB_requests/CollageRequests");
+    getAllCollages, getThingsInCollage} = require("../DB_requests/CollageRequests");
 const {decode, auth} = require("./Hash");
 
 exports.getCollages = async (req, res) =>{
@@ -20,7 +20,12 @@ exports.getCollages = async (req, res) =>{
     try{
         let count = await getCountCollages(id, style, season, dresscode);
         let data = await getCollages(id, style, season, dresscode, limit, offset);
-        const rows = data.map(u => ({...u, Photo: u.Photo.toString('base64')}));
+        const rows = [];
+
+        for (const u of data) {
+            let th = await getThingsInCollage(u.idCollage);
+            rows.push({...u, Photo: u.Photo.toString('base64'), Things:th})
+        }
         res.json({count, rows});
     }catch (e) {
         res.status(500).json({
@@ -127,7 +132,11 @@ exports.getAllCollage = async (req, res) => {
     try{
         let count = await getCountAllCollages(style, season, dresscode);
         let data = await getAllCollages(style, season, dresscode, sort, limit, offset);
-        const rows = data.map(u => ({...u, Photo: u.Photo.toString('base64')}));
+        const rows = [];
+        for (const u of data) {
+            let th = await getThingsInCollage(u.idCollage);
+            rows.push({...u, Photo: u.Photo.toString('base64'), Things:th})
+        }
         res.json({count, rows});
     }catch (e) {
         res.status(500).json({

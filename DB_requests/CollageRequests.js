@@ -2,10 +2,10 @@ exports.getCountCollages = (id, style, season, dresscode) => {
     return new Promise((resolve, reject) => {
         const {mysql} = require('./../index');
 
-        let query = `SELECT count(*) FROM collage WHERE UserID=${id} AND `+
-            `Style=${style !==""? `'${style}'` : `Style`} AND ` +
-            `Season=${season !==""? `'${season}'` : `Season`} AND ` +
-            `Dresscode=${dresscode !==""? `'${dresscode}'` : `Dresscode`}`;
+        let query = `SELECT count(*) FROM collage WHERE UserID=${id} AND ` +
+            `Style=${style !== "" ? `'${style}'` : `Style`} AND ` +
+            `Season=${season !== "" ? `'${season}'` : `Season`} AND ` +
+            `Dresscode=${dresscode !== "" ? `'${dresscode}'` : `Dresscode`}`;
 
         mysql.query(query, (error, result) => {
             if (error) reject(error);
@@ -18,7 +18,7 @@ exports.getCollages = (id, style, season, dresscode, limit, offset) => {
     return new Promise((resolve, reject) => {
         const {mysql} = require('./../index');
 
-        let query = `SELECT * FROM collage WHERE UserID=${id} AND `+
+        let query = `SELECT * FROM collage WHERE UserID=${id} AND ` +
             `Style=${style ? `'${style}'` : `Style`} AND ` +
             `Season=${season ? `'${season}'` : `Season`} AND ` +
             `Dresscode=${dresscode ? `'${dresscode}'` : `Dresscode`} ` +
@@ -39,7 +39,7 @@ exports.createCollage = (UserID, Style, Dresscode, Season, Photo, PhotoLink) => 
         const query = "INSERT INTO `collage` SET ?",
             values = {Style, Dresscode, Season, Photo, PhotoLink, UserID};
 
-        mysql.query(query,values,
+        mysql.query(query, values,
             (error, result) => {
                 if (error) reject(error);
                 resolve(result)
@@ -78,10 +78,10 @@ exports.getCountAllCollages = (style, season, dresscode) => {
     return new Promise((resolve, reject) => {
         const {mysql} = require('./../index');
 
-        let query = `SELECT count(*) FROM collage WHERE `+
-            `Style=${style !==""? `'${style}'` : `Style`} AND ` +
-            `Season=${season !==""? `'${season}'` : `Season`} AND ` +
-            `Dresscode=${dresscode !==""? `'${dresscode}'` : `Dresscode`}`;
+        let query = `SELECT count(*) FROM collage WHERE ` +
+            `Style=${style !== "" ? `'${style}'` : `Style`} AND ` +
+            `Season=${season !== "" ? `'${season}'` : `Season`} AND ` +
+            `Dresscode=${dresscode !== "" ? `'${dresscode}'` : `Dresscode`}`;
 
         mysql.query(query, (error, result) => {
             if (error) reject(error);
@@ -94,7 +94,7 @@ exports.getAllCollages = (style, season, dresscode, sort, limit, offset) => {
     return new Promise((resolve, reject) => {
         const {mysql} = require('./../index');
 
-        let query = `SELECT * FROM collage WHERE `+
+        let query = `SELECT * FROM collage WHERE ` +
             `Style=${style ? `'${style}'` : `Style`} AND ` +
             `Season=${season ? `'${season}'` : `Season`} AND ` +
             `Dresscode=${dresscode ? `'${dresscode}'` : `Dresscode`} ` +
@@ -104,6 +104,18 @@ exports.getAllCollages = (style, season, dresscode, sort, limit, offset) => {
             (error, result) => {
                 if (error) reject(error);
                 resolve(result)
+            })
+    });
+};
+
+exports.getThingsInCollage = (idCollage) => {
+    return new Promise((resolve, reject) => {
+        const {mysql} = require("./../index");
+
+        mysql.query(`SELECT ThingID FROM things_in_collage WHERE CollageID=${idCollage}`,
+            (error, result) => {
+                if (error) reject(error);
+                resolve(result.map(u=>u.ThingID));
             })
     });
 };
