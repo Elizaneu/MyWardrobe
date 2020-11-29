@@ -1,4 +1,5 @@
-const {increaseCountLikeAtCollage, addUserByLike, UserLikeCollage} = require("../DB_requests/LikeCollageRequests");
+const {increaseCountLikeAtCollage,decreaseCountLikeAtCollage,
+    addUserByLike, deleteUserByLike, UserLikeCollage} = require("../DB_requests/LikeCollageRequests");
 const {decode, auth} = require("./Hash");
 
 exports.likeCollage = async (req, res) =>{
@@ -26,13 +27,33 @@ exports.likeCollage = async (req, res) =>{
             })
         }
     }catch (e) {
-        console.log(e);
         res.status(500).json({
             error: e.sqlMessage
         })
     }
 };
 
-exports.deleteLikeCollage = (req, res) =>{
-
+exports.deleteLikeCollage = async (req, res) =>{
+    if (!await auth(req.cookies.token)) {
+        res.sendStatus(401);
+        return;
+    }
+    const id = decode(req.cookies.token);
+    let collageId = req.params.id;
+    if (!Number(collageId)) {
+        res.status(400).json({
+            error: "id is not valid"
+        });
+        return;
+    }
+    let data = await UserLikeCollage(id, collageId);
+    if (data){
+        await decreaseCountLikeAtCollage(collageId);
+        await deleteUserByLike(id, collageId);
+        res.status(200).json({isDeleteLike: true})
+    }else{
+        res.status(400).json({
+            error:"already dont like"
+        })
+    }
 };
