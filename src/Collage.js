@@ -1,3 +1,4 @@
+const {UserLikeCollage} = require("../DB_requests/LikeCollageRequests");
 const {getCountCollages, getCollages, createCollage,
     addThingToCollage, deleteCollage, getCountAllCollages,
     getAllCollages, getThingsInCollage} = require("../DB_requests/CollageRequests");
@@ -24,7 +25,8 @@ exports.getCollages = async (req, res) =>{
 
         for (const u of data) {
             let th = await getThingsInCollage(u.idCollage);
-            rows.push({...u, Photo: u.Photo.toString('base64'), Things:th})
+            let isLike = await UserLikeCollage(id, u.idCollage);
+            rows.push({...u, Photo: u.Photo.toString('base64'), Things:th, isLike})
         }
         res.json({count, rows});
     }catch (e) {
@@ -133,9 +135,17 @@ exports.getAllCollage = async (req, res) => {
         let count = await getCountAllCollages(style, season, dresscode);
         let data = await getAllCollages(style, season, dresscode, sort, limit, offset);
         const rows = [];
+        let id = null;
+        if (await auth(req.cookies.token)) {
+            id = decode(req.cookies.token);
+        }
         for (const u of data) {
             let th = await getThingsInCollage(u.idCollage);
-            rows.push({...u, Photo: u.Photo.toString('base64'), Things:th})
+            let isLike = false;
+            if (id){
+                isLike = await UserLikeCollage(id, u.idCollage);
+            }
+            rows.push({...u, Photo: u.Photo.toString('base64'), Things:th, isLike})
         }
         res.json({count, rows});
     }catch (e) {
