@@ -33,6 +33,20 @@
     margin-right: 5px;
 }
 
+.button:focus, .button:active, .button:hover {
+    background-color: #f6e5dc;
+}
+
+.button_disabled {
+    background-color: #e0dfdf;
+    color: grey;
+    cursor: default;
+}
+
+.button_disabled:hover, .button_disabled:focus {
+    background-color: #e0dfdf;
+}
+
 .mainFrame_topButtons {
     position: absolute;
     display: flex;
@@ -75,4 +89,8 @@
     flex-direction: row;
     bottom: 38px;
     right: 7px;
+}
+
+.onDelete {
+    border: 2px solid red;
 }

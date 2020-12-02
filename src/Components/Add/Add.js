@@ -5,7 +5,7 @@ import logo from "../../assets/image/logo.svg";
 import withAuthRedirect from "../../HOC/withAuthRedirect";
 import {Field, reduxForm} from "redux-form";
 import {require} from "../../Validate/validators";
-import {Categories} from "../../Categories";
+import {Categories} from "../../Lists/Categories";
 import {CreateThing, setCreate} from "../../Reducers/thingReducer";
 import {connect} from "react-redux";
 import {compose} from "redux";

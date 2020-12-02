@@ -3,7 +3,7 @@ import c from "./Wardrobe.module.css";
 import Header from "../Header/Header";
 import withAuthRedirect from "../../HOC/withAuthRedirect";
 import plus from "../../assets/image/Header/plus.svg";
-import {Categories} from "../../Categories";
+import {Categories} from "../../Lists/Categories";
 import {deleteThing, getThing} from "../../API/ThingAPI";
 import {Link} from "react-router-dom";
 import {confirmAlert} from "react-confirm-alert";
@@ -17,8 +17,6 @@ class Wardrobe extends React.Component {
         page: 0,
         lastPage: 0
     }
-
-
 
     confirmDeleteMessage = {
         title: "Удаление элементов",
@@ -58,8 +56,10 @@ class Wardrobe extends React.Component {
         let data = await getThing(this.state.option);
         this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
         let LP = Math.ceil(data.count / 12 - 1)
-        this.setState({block: false,
-            lastPage: LP === -1 ? 0 : LP} )
+        this.setState({
+            block: false,
+            lastPage: LP === -1 ? 0 : LP
+        })
     }
 
     onChangeValue = async (e) => {
@@ -68,8 +68,10 @@ class Wardrobe extends React.Component {
         let data = await getThing(e.target.value);
         this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
         let LP = Math.ceil(data.count / 12 - 1)
-        this.setState({block: false,
-            lastPage: LP === -1 ? 0 : LP} )
+        this.setState({
+            block: false,
+            lastPage: LP === -1 ? 0 : LP
+        })
     }
 
     chooseForDelete = (photoId) => () => {
@@ -105,8 +107,9 @@ class Wardrobe extends React.Component {
             let LP = Math.ceil(data.count / 12 - 1)
             this.setState({
                 block: false,
-                Photos: data.map(d => ({...d, delete: false})),
-                lastPage: LP === -1 ? 0 : LP})
+                Photos: data.rows.map(d => ({...d, delete: false})),
+                lastPage: LP === -1 ? 0 : LP
+            })
         }
     };
 
@@ -146,8 +149,8 @@ class Wardrobe extends React.Component {
                     </div>
                     <div className={c.mainFrame_bottomButtonsLeft}>
                     <span className={this.state.block || this.state.page === 0
-                            ? c.button + " " + c.button_disabled
-                            : c.button}
+                        ? c.button + " " + c.button_disabled
+                        : c.button}
                           onClick={this.changePage(0)}>
                         В начало
                     </span>
@@ -166,9 +169,9 @@ class Wardrobe extends React.Component {
                         Следующая
                     </span>
                         <span onClick={this.changePage(this.state.lastPage)}
-                            className={this.state.block || this.state.page === this.state.lastPage
-                            ? c.button + " " + c.button_disabled
-                            : c.button}>
+                              className={this.state.block || this.state.page === this.state.lastPage
+                                  ? c.button + " " + c.button_disabled
+                                  : c.button}>
                         В конец
                     </span>
                     </div>

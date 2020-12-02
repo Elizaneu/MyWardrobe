@@ -17,3 +17,11 @@ form {
 select {
     font-size: 15px;
 }
+
+span, a, div, img, canvas{
+    -ms-user-select: none;
+    -moz-user-select: none;
+    -khtml-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
+}

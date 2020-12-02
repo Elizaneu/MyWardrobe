@@ -4,8 +4,13 @@ import c from "./Create.module.css";
 import withAuthRedirect from "../../HOC/withAuthRedirect";
 import plus from "../../assets/image/Header/plus.svg";
 import {Link} from "react-router-dom";
-import {Categories} from "../../Categories";
+import {Categories} from "../../Lists/Categories";
 import {getThing} from "../../API/ThingAPI";
+import {createCollage} from "../../API/CollageAPI";
+import {Style} from "../../Lists/Styles";
+import {Dresscode} from "../../Lists/Dresscode";
+import {Season} from "../../Lists/Seasons";
+import {saveCollage} from "../../Validate/validators";
 
 class Create extends React.Component {
 
@@ -16,6 +21,10 @@ class Create extends React.Component {
         page: 0,
         lastPage: 0,
         chosenPhotos: [],
+        style: "Кэжуал",
+        dresscode: "Прогулка",
+        season: "Осень",
+        isCreated: false,
     }
     ref = React.createRef();
 
@@ -150,6 +159,38 @@ class Create extends React.Component {
         }
     }
 
+    dataURLtoFile(dataurl, filename) {
+        let arr = dataurl.split(","),
+            mime = arr[0].match(/:(.*?);/)[1],
+            bstr = atob(arr[1]),
+            n = bstr.length,
+            u8arr = new Uint8Array(n);
+
+        while (n--) {
+            u8arr[n] = bstr.charCodeAt(n);
+        }
+        return new File([u8arr], filename, {type: mime});
+    }
+
+    onSelectChange = (name) => async (e) => {
+        this.setState({
+            [name]: e.target.value
+        })
+    }
+
+    onSave = async () => {
+        if (this.state.chosenPhotos.length !== 0) {
+            const photo = this.ref.current.toDataURL('image/png')
+            const file = this.dataURLtoFile(photo, "bla.png")
+            let data = await createCollage(file, this.state.style, this.state.dresscode,
+                this.state.season, this.state.chosenPhotos.map(p => p.idThing))
+            console.log(data);
+        } else
+            console.log("oops");
+        this.setState({chosenPhotos: []});
+        this.canvasRender();
+    }
+
     render() {
         return (
             <div>
@@ -215,9 +256,47 @@ class Create extends React.Component {
                         </span>
                     </div>
                 </div>
-                <span className={c.button + " " + c.button_save}>
-                    Сохранить
-                </span>
+
+                <div className={c.bottom}>
+                    <div className={c.bottom_text}>
+                        Укажите характеристики коллажа:
+                    </div>
+                    <div className={c.criterion}>
+                        <select className={c.categoryButton}
+                                value={this.state.style}
+                                required
+                                onChange={this.onSelectChange("style")}
+                                disabled={this.state.block}>
+                            {
+                                Style.map(u => <option key={u.option}>{u.option}</option>)
+                            }
+                        </select>
+                        <select className={c.categoryButton}
+                                value={this.state.dresscode}
+                                required
+                                onChange={this.onSelectChange("dresscode")}
+                                disabled={this.state.block}>
+                            {
+                                Dresscode.map(u => <option key={u.option}>{u.option}</option>)
+                            }
+                        </select>
+                        <select className={c.categoryButton}
+                                value={this.state.season}
+                                required
+                                onChange={this.onSelectChange("season")}
+                                disabled={this.state.block}>
+                            {
+                                Season.map(u => <option key={u.option}>{u.option}</option>)
+                            }
+                        </select>
+                    </div>
+                    <span className={this.state.chosenPhotos.length === 0 ? c.button + " " + c.button_save
+                        + " " + c.button_disabled : c.button + " " + c.button_save}
+                          onClick={this.onSave}>
+                        Сохранить
+                    </span>
+                </div>
+
             </div>
         )
     }

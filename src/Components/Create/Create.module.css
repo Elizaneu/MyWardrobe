@@ -48,10 +48,11 @@
 }
 
 .button_save {
-    position: absolute;
-    top: 620px;
-    left: 50px;
+    margin-top: 10px;
+    display: flex;
+    width: 74px;
     cursor: pointer;
+    padding: 3px 10px;
 }
 
 .gallery_img {
@@ -108,4 +109,23 @@
 
 .chosen{
     border: 3px solid black;
+}
+
+.criterion {
+    display: flex;
+    width: 300px;
+    cursor: pointer;
+}
+
+.bottom {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 620px;
+    left: 50px;
+}
+
+.bottom_text {
+    font-size: 18px;
+    margin-bottom: 10px;
 }
