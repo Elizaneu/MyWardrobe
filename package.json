@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@babel/plugin-transform-react-jsx": "^7.10.4",
+    "@babel/plugin-transform-react-jsx-self": "^7.10.4",
+    "@babel/polyfill": "^7.12.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -48,6 +51,10 @@
     ]
   },
   "devDependencies": {
+    "@babel/cli": "^7.12.8",
+    "@babel/core": "^7.9.0",
+    "@babel/preset-env": "^7.11.5",
+    "@babel/preset-react": "^7.10.4",
     "jest": "^24.9.0",
     "react-test-renderer": "^16.13.1",
     "redux-mock-store": "^1.5.4"

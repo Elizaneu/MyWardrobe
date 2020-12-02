@@ -105,3 +105,7 @@
 .button_disabled:hover, .button_disabled:focus {
     background-color: #e0dfdf;
 }
+
+.chosen{
+    border: 3px solid black;
+}

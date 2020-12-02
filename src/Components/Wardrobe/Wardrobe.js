@@ -57,8 +57,9 @@ class Wardrobe extends React.Component {
         this.setState({block: true})
         let data = await getThing(this.state.option);
         this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        let LP = Math.ceil(data.count / 12 - 1)
         this.setState({block: false,
-            lastPage: Math.ceil(data.count / 12 - 1)})
+            lastPage: LP === -1 ? 0 : LP} )
     }
 
     onChangeValue = async (e) => {
@@ -66,8 +67,9 @@ class Wardrobe extends React.Component {
         this.setState({block: true})
         let data = await getThing(e.target.value);
         this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        let LP = Math.ceil(data.count / 12 - 1)
         this.setState({block: false,
-            lastPage: Math.ceil(data.count / 12 - 1)})
+            lastPage: LP === -1 ? 0 : LP} )
     }
 
     chooseForDelete = (photoId) => () => {
@@ -100,10 +102,11 @@ class Wardrobe extends React.Component {
         if (page >= 0 && page <= this.state.lastPage) {
             this.setState({page, block: true});
             let data = await getThing(this.state.option, page * 12);
+            let LP = Math.ceil(data.count / 12 - 1)
             this.setState({
                 block: false,
                 Photos: data.map(d => ({...d, delete: false})),
-                lastPage: Math.ceil(data.count / 12 - 1)})
+                lastPage: LP === -1 ? 0 : LP})
         }
     };
 
@@ -158,14 +161,12 @@ class Wardrobe extends React.Component {
                     <div className={c.mainFrame_bottomButtonsRight}>
                     <span onClick={this.changePage(this.state.page + 1)}
                           className={this.state.block || this.state.page === this.state.lastPage
-                              || this.state.lastPage === 0
                               ? c.button + " " + c.button_disabled
                               : c.button}>
                         Следующая
                     </span>
                         <span onClick={this.changePage(this.state.lastPage)}
                             className={this.state.block || this.state.page === this.state.lastPage
-                                || this.state.lastPage === 0
                             ? c.button + " " + c.button_disabled
                             : c.button}>
                         В конец
