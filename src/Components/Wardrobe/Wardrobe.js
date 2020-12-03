@@ -38,8 +38,15 @@ class Wardrobe extends React.Component {
             },
             {
                 label: "Нет"
-            }
-        ]
+            },
+
+        ],
+        afterClose: () => {
+            this.setState(state=>({
+                ...state,
+                Photos: state.Photos.map(u=>({...u, delete: false}))
+            }))
+        }
     }
 
     alertMessage = {
@@ -91,8 +98,11 @@ class Wardrobe extends React.Component {
     }
 
     buttonDelete = () => {
+        if (this.state.Photos.length === 0)
+            return
         if (this.state.editMod) {
-            confirmAlert(this.confirmDeleteMessage)
+            if (this.state.Photos.find(u=>u.delete===true))
+                confirmAlert(this.confirmDeleteMessage)
         }
         if (!this.state.editMod) {
             confirmAlert(this.alertMessage)
@@ -136,7 +146,9 @@ class Wardrobe extends React.Component {
                         </Link>
                     </div>
                     <span onClick={this.buttonDelete}
-                          className={c.button + " " + c.mainFrame_topButton + " " + c.mainFrame_topButton__right}>
+                          className={this.state.Photos.length === 0 ? c.button + " " + c.button_disabled
+                              + " " + c.mainFrame_topButton + " " + c.mainFrame_topButton__right:
+                              c.button + " " + c.mainFrame_topButton + " " + c.mainFrame_topButton__right}>
                         {this.state.editMod ? "Применить" : "Удалить"}
                     </span>
                     <div className={c.mainFrame_gallery}>

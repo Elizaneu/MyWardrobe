@@ -79,24 +79,28 @@ class Create extends React.Component {
         this.canvasRender();
     }
 
-    canvasRender = () => {
+    canvasRender = async () => {
         const canvas = this.ref.current;
         const ctx = canvas.getContext('2d');
+        ctx.fillStyle = "white";
         if (this.state.chosenPhotos.length === 0) {
-            ctx.putImageData(new ImageData(500, 500), 0, 0)
+            await ctx.putImageData(new ImageData(500, 500), 0, 0)
+            ctx.fillRect(0, 0, 500, 500);
         }
         if (this.state.chosenPhotos.length === 1) {
             const img = new Image();
             img.src = "data:image/png;base64," + this.state.chosenPhotos[0].Photo
-            ctx.putImageData(new ImageData(500, 500), 0, 0)
+            await ctx.putImageData(new ImageData(500, 500), 0, 0)
+            await ctx.fillRect(0, 0, 500, 500);
             ctx.drawImage(img, 0, 0, 500, 500)
         }
         if (this.state.chosenPhotos.length === 2) {
             const img1 = new Image(), img2 = new Image();
             img1.src = "data:image/png;base64," + this.state.chosenPhotos[0].Photo
             img2.src = "data:image/png;base64," + this.state.chosenPhotos[1].Photo
-            ctx.putImageData(new ImageData(500, 500), 0, 0)
-            ctx.drawImage(img1, 0, 0, 250, 250)
+            await ctx.putImageData(new ImageData(500, 500), 0, 0)
+            await ctx.fillRect(0, 0, 500, 500);
+            await ctx.drawImage(img1, 0, 0, 250, 250)
             ctx.drawImage(img2, 250, 250, 250, 250)
         }
         if (this.state.chosenPhotos.length === 3) {
@@ -105,9 +109,10 @@ class Create extends React.Component {
             img2.src = "data:image/png;base64," + this.state.chosenPhotos[1].Photo
             img3.src = "data:image/png;base64," + this.state.chosenPhotos[2].Photo
 
-            ctx.putImageData(new ImageData(500, 500), 0, 0)
-            ctx.drawImage(img1, 0, 0, 250, 250)
-            ctx.drawImage(img2, 0, 250, 250, 250)
+            await ctx.putImageData(new ImageData(500, 500), 0, 0)
+            await ctx.fillRect(0, 0, 500, 500);
+            await ctx.drawImage(img1, 0, 0, 250, 250)
+            await ctx.drawImage(img2, 0, 250, 250, 250)
             ctx.drawImage(img3, 250, 125, 250, 250)
         }
         if (this.state.chosenPhotos.length === 4) {
@@ -117,10 +122,11 @@ class Create extends React.Component {
             img3.src = "data:image/png;base64," + this.state.chosenPhotos[2].Photo
             img4.src = "data:image/png;base64," + this.state.chosenPhotos[3].Photo
 
-            ctx.putImageData(new ImageData(500, 500), 0, 0)
-            ctx.drawImage(img1, 0, 0, 250, 250)
-            ctx.drawImage(img2, 0, 250, 250, 250)
-            ctx.drawImage(img3, 250, 0, 250, 250)
+            await ctx.putImageData(new ImageData(500, 500), 0, 0)
+            await ctx.fillRect(0, 0, 500, 500);
+            await ctx.drawImage(img1, 0, 0, 250, 250)
+            await ctx.drawImage(img2, 0, 250, 250, 250)
+            await ctx.drawImage(img3, 250, 0, 250, 250)
             ctx.drawImage(img4, 250, 250, 250, 250)
         }
         if (this.state.chosenPhotos.length === 5) {
@@ -132,11 +138,12 @@ class Create extends React.Component {
             img4.src = "data:image/png;base64," + this.state.chosenPhotos[3].Photo
             img5.src = "data:image/png;base64," + this.state.chosenPhotos[4].Photo
 
-            ctx.putImageData(new ImageData(500, 500), 0, 0)
-            ctx.drawImage(img1, 0, 0, 250, 250)
-            ctx.drawImage(img2, 0, 250, 250, 250)
-            ctx.drawImage(img3, 300, 0, 150, 150)
-            ctx.drawImage(img4, 300, 175, 150, 150)
+            await ctx.putImageData(new ImageData(500, 500), 0, 0)
+            await ctx.fillRect(0, 0, 500, 500);
+            await ctx.drawImage(img1, 0, 0, 250, 250)
+            await ctx.drawImage(img2, 0, 250, 250, 250)
+            await ctx.drawImage(img3, 300, 0, 150, 150)
+            await ctx.drawImage(img4, 300, 175, 150, 150)
             ctx.drawImage(img5, 300, 350, 150, 150)
         }
         if (this.state.chosenPhotos.length === 6) {
@@ -149,12 +156,13 @@ class Create extends React.Component {
             img5.src = "data:image/png;base64," + this.state.chosenPhotos[4].Photo
             img6.src = "data:image/png;base64," + this.state.chosenPhotos[5].Photo
 
-            ctx.putImageData(new ImageData(500, 500), 0, 0)
-            ctx.drawImage(img1, 33, 0, 150, 150)
-            ctx.drawImage(img2, 33, 175, 150, 150)
-            ctx.drawImage(img3, 33, 350, 150, 150)
-            ctx.drawImage(img4, 292, 0, 150, 150)
-            ctx.drawImage(img5, 292, 175, 150, 150)
+            await ctx.putImageData(new ImageData(500, 500), 0, 0)
+            await ctx.fillRect(0, 0, 500, 500);
+            await ctx.drawImage(img1, 33, 0, 150, 150)
+            await ctx.drawImage(img2, 33, 175, 150, 150)
+            await ctx.drawImage(img3, 33, 350, 150, 150)
+            await ctx.drawImage(img4, 292, 0, 150, 150)
+            await ctx.drawImage(img5, 292, 175, 150, 150)
             ctx.drawImage(img6, 292, 350, 150, 150)
         }
     }
@@ -187,7 +195,7 @@ class Create extends React.Component {
             console.log(data);
         } else
             console.log("oops");
-        this.setState({chosenPhotos: []});
+        await this.setState({chosenPhotos: []});
         this.canvasRender();
     }
 
