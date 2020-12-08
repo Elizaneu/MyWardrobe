@@ -43,7 +43,6 @@ class Find extends React.Component {
             block: false,
             lastPage: LP === -1 ? 0 : LP
         })
-        console.log(this.state)
     }
 
     onLike = (id) => async () => {
@@ -91,7 +90,6 @@ class Find extends React.Component {
     changePage = (page) => async () => {
         if (page >= 0 && page <= this.state.lastPage) {
             await this.setState({page, block: true, offset: page*6});
-            console.log(this.state)
             this.getCollages(this.state.style,
                 this.state.season, this.state.dresscode, this.state.sort, this.state.offset)
         }
