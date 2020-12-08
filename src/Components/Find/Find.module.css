@@ -17,6 +17,7 @@
     text-align: center;
     margin-right: 10px;
     margin-bottom: 10px;
+    cursor: pointer;
 }
 
 .categoryItem_list {
@@ -37,14 +38,6 @@
     margin-top: 10px;
 }
 
-.first {
-    display: none;
-}
-
-.second {
-    /*display: none;*/
-}
-
 .mainFrame {
     position: relative;
     width: 100%;
@@ -58,21 +51,7 @@
     right: 30px;
     margin-top: 20px;
     width: 600px;
-}
-
-
-.galleryRow {
-    /*border: 1px solid black;
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    grid-template-rows: 1fr 1fr 1fr;
-    width: 100%;
-    justify-items: stretch;
-    margin-bottom: 10px;*/
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-    margin-bottom: 10px;
+    height: 520px;
 }
 
 .gallery_img {
@@ -83,6 +62,11 @@
 }
 
 .gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+    width: 100%;
+    justify-items: center;
     padding-right: 10px;
 }
 
@@ -117,4 +101,39 @@
 
 .bottom_icon {
     margin: 20px;
+}
+
+.bottomButtonsLeft {
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    bottom: 0;
+}
+
+.bottomButtonsRight {
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    bottom: 0;
+    right: 0;
+}
+
+.button__light:focus, .button__light:active, .button__light:hover, .button_chosen {
+    background-color: #f6e5dc;
+}
+
+.button_disabled {
+    background-color: #e0dfdf;
+    color: grey;
+    cursor: default;
+}
+
+.button_disabled:hover, .button_disabled:focus {
+    background-color: #e0dfdf;
+}
+
+.margin {
+    margin-right: 10px;
 }

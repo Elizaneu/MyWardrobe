@@ -1,242 +1,182 @@
 import React from "react";
 import c from "./Find.module.css";
 import Header from "../Header/Header";
-import img1 from "../../assets/image/Gallery/img1.jpg";
-import img2 from "../../assets/image/Gallery/img2.jpg";
-import img3 from "../../assets/image/Gallery/img3.jpg";
-import img4 from "../../assets/image/Gallery/img4.jpg";
-import img5 from "../../assets/image/Gallery/img5.jpg";
-import img6 from "../../assets/image/Gallery/img6.jpg";
-import img7 from "../../assets/image/Gallery/img7.jpg";
-import img8 from "../../assets/image/Gallery/img8.jpg";
-import fav from "../../assets/image/Search/fav.svg";
-import favNotAct from "../../assets/image/Search/favNotActive.svg";
 import logo from "../../assets/image/logo.svg";
 import withAuthRedirect from "../../HOC/withAuthRedirect";
+import {Categories} from "../../Lists/Categories";
+import {Criterion} from "./Criterion";
+import {Category} from "./Category";
+import {deleteLike, getCollageAll, likeCollage} from "../../API/CollageAPI";
+import {Element} from "./Element";
 
 
-const Find = (props) => {
-    return (
-        <div>
-            <Header/>
-            <div className={c.mainFrame}>
-                <div className={c.searchSpace}>
-                    <select className={c.button__dark} required>
-                        <option>По критериям</option>
-                        <option>По категориям</option>
-                    </select>
-                    <div className={c.category_items + " " + c.first}>
-                <span className={c.button__dark}>
-                    Стиль
-                </span>
-                        <div className={c.categoryItem_list}>
-                    <span className={c.button__light}>
-                        Классика
-                    </span>
-                            <span className={c.button__light}>
-                        Кэжуал
-                    </span>
-                            <span className={c.button__light}>
-                        Преппи
-                    </span>
-                        </div>
-                        <div className={c.categoryItem_list}>
-                    <span className={c.button__light}>
-                        Гранж
-                    </span>
-                            <span className={c.button__light}>
-                        Милитари
-                    </span>
-                            <span className={c.button__light}>
-                        Романтика
-                    </span>
-                        </div>
-                        <div className={c.categoryItem_list}>
-                    <span className={c.button__light}>
-                        Минимализм
-                    </span>
-                            <span className={c.button__light}>
-                        Глэм
-                    </span>
-                            <span className={c.button__light}>
-                        Спорт
-                    </span>
-                        </div>
-                        <span className={c.button__dark}>
-                    Дресс-код
-                </span>
-                        <div className={c.categoryItem_list}>
-                    <span className={c.button__light}>
-                        Прогулка
-                    </span>
-                            <span className={c.button__light}>
-                        Работа
-                    </span>
-                            <span className={c.button__light}>
-                        Университет
-                    </span>
-                        </div>
-                        <div className={c.categoryItem_list}>
-                    <span className={c.button__light}>
-                        Тренировка
-                    </span>
-                            <span className={c.button__light}>
-                        Вечеринка
-                    </span>
-                            <span className={c.button__light}>
-                        Пляж
-                    </span>
-                        </div>
-                        <span className={c.button__dark}>
-                    Сезон
-                </span>
-                        <div className={c.categoryItem_list}>
-                    <span className={c.button__light}>
-                        Зима
-                    </span>
-                            <span className={c.button__light}>
-                        Весна
-                    </span>
-                            <span className={c.button__light}>
-                        Лето
-                    </span>
-                            <span className={c.button__light}>
-                        Осень
-                    </span>
-                        </div>
+class Find extends React.Component {
+
+    state = {
+        option: Categories[0].option,
+        search: 1,
+        sort: "Likes",
+        Photos: [],
+        count: 0,
+        block: false,
+        page: 0,
+        lastPage: 0,
+        style: "",
+        dresscode: "",
+        season: "",
+        offset: 0,
+    }
+
+    componentDidMount() {
+        this.getCollages("", "", "")
+    }
+
+    onChangeValue = async (e) => {
+        this.setState({search: Number(e.target.value)})
+    }
+
+    getCollages = async (Style, Season, Dresscode, Sort = "Likes", Offset = 0, Limit = 6) => {
+        let data = await getCollageAll(Style, Season, Dresscode, Sort, Offset, Limit)
+        this.setState({Photos: data.rows, count: data.count})
+        let LP = Math.ceil(this.state.count / 6 - 1);
+        this.setState({
+            block: false,
+            lastPage: LP === -1 ? 0 : LP
+        })
+        console.log(this.state)
+    }
+
+    onLike = (id) => async () => {
+        if (this.state.Photos.find(u => u.idCollage === id).isLike) {
+            let data = await deleteLike(id);
+            if (data.isDeleteLike) {
+                this.setState(state => ({
+                    ...state,
+                    Photos: state.Photos.map(u => {
+                        if (u.idCollage === id)
+                            return {...u, isLike: false, Likes: u.Likes - 1}
+                        else
+                            return u;
+                    })
+                }))
+            }
+        } else {
+            let data = await likeCollage(id);
+            if (data.isLike) {
+                this.setState(state => ({
+                    ...state,
+                    Photos: state.Photos.map(u => {
+                        if (u.idCollage === id)
+                            return {...u, isLike: true, Likes: u.Likes + 1}
+                        else
+                            return u;
+                    })
+                }))
+            }
+        }
+    }
+
+    changeSort = async (e) => {
+        await this.setState({sort: e.target.value})
+        this.getCollages(this.state.style, this.state.season,
+            this.state.dresscode, this.state.sort, this.state.offset)
+    }
+
+    onChangeCriterion = (key, value) => async () => {
+        await this.setState({[key]: this.state[key] === value ? "" : value});
+        this.getCollages(this.state.style, this.state.season,
+            this.state.dresscode, this.state.sort, this.state.offset);
+    }
+
+    changePage = (page) => async () => {
+        if (page >= 0 && page <= this.state.lastPage) {
+            await this.setState({page, block: true, offset: page*6});
+            console.log(this.state)
+            this.getCollages(this.state.style,
+                this.state.season, this.state.dresscode, this.state.sort, this.state.offset)
+        }
+    };
+
+    render() {
+        return (
+            <div>
+                <Header/>
+                <div className={c.mainFrame}>
+                    <div className={c.searchSpace}>
+                        <select
+                            onChange={this.onChangeValue}
+                            className={c.button__dark}
+                            value={this.state.search}
+                            required>
+                            <option value={1}>По критериям</option>
+                            <option value={0}>По категориям</option>
+                        </select>
+                        {this.state.search === 1 && <Criterion
+                            style={this.state.style}
+                            dresscode={this.state.dresscode}
+                            season={this.state.season}
+                            onChangeCriterion={this.onChangeCriterion}/>}
+                        {this.state.search === 0 && <Category/>}
                     </div>
-                    <div className={c.category_items + " " + c.second}>
-                    <span className={c.button__dark}>
-                       Верх
+                    <div className={c.searchResult}>
+                        <select value={this.state.sort} onChange={this.changeSort}
+                                className={c.button__light + " " + c.button__light__brown} required>
+                            <option value={"Likes"}>
+                                По популярности
+                            </option>
+                            <option value={"CreationDate"}>
+                                По дате добавления
+                            </option>
+                        </select>
+                        <div className={c.gallery}>
+                            {this.state.Photos.map(u => <Element key={u.idCollage}
+                                                                 isLike={u.isLike}
+                                                                 likes={u.Likes}
+                                                                 src={"data:image/png;base64," + u.Photo}
+                                                                 onLike={this.onLike(u.idCollage)}/>)}
+                        </div>
+                        <div className={c.bottomButtonsLeft}>
+                        <span className={this.state.block || this.state.page === 0
+                            ? c.button__light + " " + c.button__light__brown
+                            + " " + c.button_disabled + " " + c.margin
+                            : c.button__light + " " + c.button__light__brown
+                            + " " + c.margin}
+                              onClick={this.changePage(0)}>
+                        В начало
                     </span>
-                        <div className={c.categoryItem_list}>
-                            <span className={c.button__light}>Футболки и топы</span>
-                            <span className={c.button__light}>Свитеры и кардиганы</span>
-                            <span className={c.button__light}>Рубашки и блузы</span>
-                        </div>
-                        <span className={c.button__dark}>
-                        Низ
+                            <span onClick={this.changePage(this.state.page - 1)}
+                                  className={this.state.block || this.state.page === 0
+                                      ? c.button__light + " " + c.button__light__brown
+                                      + " " + c.button_disabled
+                                      : c.button__light + " " + c.button__light__brown}>
+                        Предыдущая
                     </span>
-                        <div className={c.categoryItem_list}>
-                            <span className={c.button__light}>Юбки</span>
-                            <span className={c.button__light}>Брюки</span>
-                            <span className={c.button__light}>Джинсы</span>
-                            <span className={c.button__light}>Шорты</span>
                         </div>
-                        <span className={c.button__dark}>
-                        Самостоятельные единицы
+                        <div className={c.bottomButtonsRight}>
+                        <span onClick={this.changePage(this.state.page + 1)}
+                              className={this.state.block || this.state.page === this.state.lastPage
+                                  ? c.button__light + " " + c.button__light__brown
+                                  + " " + c.button_disabled + " " + c.margin
+                                  : c.button__light + " " + c.button__light__brown
+                                  + " " + c.margin}>
+                        Следующая
                     </span>
-                        <div className={c.categoryItem_list}>
-                            <span className={c.button__light}>Комбинезоны</span>
-                            <span className={c.button__light}>Платья</span>
-                            <span className={c.button__light}>Купальники</span>
-                        </div>
-                        <span className={c.button__dark}>
-                        Верхняя одежда
-                    </span>
-                        <div className={c.categoryItem_list}>
-                            <span className={c.button__light}>Куртки</span>
-                            <span className={c.button__light}>Пальто</span>
-                            <span className={c.button__light}>Плащи</span>
-                            <span className={c.button__light}>Пуховики</span>
-                            <span className={c.button__light}>Пиджаки</span>
-                        </div>
-                        <span className={c.button__dark}>
-                        Обувь
-                    </span>
-                        <div className={c.categoryItem_list}>
-                            <span className={c.button__light}>Сапоги</span>
-                            <span className={c.button__light}>Ботинки</span>
-                            <span className={c.button__light}>Туфли</span>
-                            <span className={c.button__light}>Босоножки</span>
-                            <span className={c.button__light}>Кроссовки</span>
-                        </div>
-                        <span className={c.button__dark}>
-                        Аксессуары
-                    </span>
-                        <div className={c.categoryItem_list}>
-                            <span className={c.button__light}>Сумки</span>
-                            <span className={c.button__light}>Ремни</span>
-                            <span className={c.button__light}>Шляпы</span>
-                            <span className={c.button__light}>Бижутерия</span>
-                            <span className={c.button__light}>Шарфы</span>
-                        </div>
-                    </div>
-                </div>
-                <div className={c.searchResult}>
-                    <select className={c.button__light + " " + c.button__light__brown} required>
-                        <option>
-                            По популярности
-                        </option>
-                        <option>
-                            По дате добавления
-                        </option>
-                    </select>
-                    <div className={c.gallery}>
-                        <div className={c.galleryRow}>
-                            <img className={c.gallery_img} src={img1} alt={""}/>
-                            <img className={c.gallery_img} src={img2} alt={""}/>
-                            <img className={c.gallery_img} src={img3} alt={""}/>
-                        </div>
-                        <div className={c.galleryRow}>
-                            <span className={c.gallery_like}>
-                                <img className={c.button_icon} src={favNotAct} alt={""}/>
-                                10 нравится
-                            </span>
-                            <span className={c.gallery_like}>
-                                <img className={c.button_icon} src={favNotAct} alt={""}/>
-                                10 нравится
-                            </span>
-                            <span className={c.gallery_like}>
-                                <img className={c.button_icon} src={favNotAct} alt={""}/>
-                                10 нравится
-                            </span>
-                        </div>
-                        <div className={c.galleryRow}>
-                            <img className={c.gallery_img} src={img5} alt={""}/>
-                            <img className={c.gallery_img} src={img6} alt={""}/>
-                            <img className={c.gallery_img} src={img7} alt={""}/>
-                        </div>
-                        <div className={c.galleryRow}>
-                            <span className={c.gallery_like}>
-                                <img className={c.button_icon} src={favNotAct} alt={""}/>
-                                10 нравится
-                            </span>
-                            <span className={c.gallery_like}>
-                                <img className={c.button_icon} src={favNotAct} alt={""}/>
-                                10 нравится
-                            </span>
-                            <span className={c.gallery_like}>
-                                <img className={c.button_icon} src={favNotAct} alt={""}/>
-                                10 нравится
-                            </span>
-                        </div>
-                    </div>
-                    <div className={c.bottomButton}>
-                        <div>
-                        <span className={c.button__light + " " + c.button__light__brown}>
-                            В начало
-                        </span>
-                            <span className={c.button__light + " " + c.button__light__brown}>
-                            Предыдущая
-                        </span>
-                        </div>
-                        <div>
-                        <span className={c.button__light + " " + c.button__light__brown}>
-                            Следующая
-                        </span>
-                            <span className={c.button__light + " " + c.button__light__brown}>
+                            <span onClick={this.changePage(this.state.lastPage)}
+                                  className={this.state.block || this.state.page === this.state.lastPage
+                                      ? c.button__light + " " + c.button__light__brown
+                                      + " " + c.button_disabled
+                                      : c.button__light + " " + c.button__light__brown}>
                             В конец
                         </span>
                         </div>
                     </div>
                 </div>
+                <div className={c.bottom}>
+                    <img className={c.bottom_icon} src={logo} alt={""}/>
+                </div>
             </div>
-            <div className={c.bottom}>
-                <img className={c.bottom_icon} src={logo} alt={""}/>
-            </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default withAuthRedirect(Find);

@@ -23,11 +23,23 @@ export const createCollage = (Photo, Style, Dresscode, Season, Things) => {
     })
 }
 
-export const getCollage = (Category = "", Style = "", Season = "", Dresscode = "", Offset = 0, Limit = 12) => {
-    return ms.get(`/collage/?category=${Category}&offset=${Offset}&
-    limit=${Limit}&style=${Style}&season=${Season}&dresscode=${Dresscode}`).then(res=>res.data)
+export const getCollage = (Style = "", Season = "", Dresscode = "", Offset = 0, Limit = 12) => {
+    return ms.get(`/collage/?offset=${Offset}&limit=${Limit}&style=${Style}&season=${Season}&dresscode=${Dresscode}`).then(res=>res.data)
+}
+
+export const getCollageAll = (Style = "", Season = "", Dresscode = "", Sort = "Likes", Offset = 0, Limit = 6) => {
+    return ms.get(`/collage/all/?offset=${Offset}&
+    limit=${Limit}&style=${Style}&season=${Season}&dresscode=${Dresscode}&sort=${Sort}`).then(res=>res.data)
 }
 
 export const deleteCollage = (idCollage) => {
     return ms.delete(`/collage/${idCollage}`).then(res=>res.data)
+}
+
+export const likeCollage = (id) => {
+    return ms.get(`/like/collage/${id}`).then(res=>res.data)
+}
+
+export const deleteLike = (id) => {
+    return ms.delete(`/like/collage/${id}`).then(res=>res.data)
 }
