@@ -77,7 +77,7 @@ class Outfits extends React.Component {
         let dresscode = this.state.dresscode === "Дресс-код" ? "" : this.state.dresscode;
         let season = this.state.season === "Сезон" ? "" : this.state.season;
         let style = this.state.style === "Стиль" ? "" : this.state.style;
-        let data = await getCollage(category, style, season, dresscode);
+        let data = await getCollage(category, style, season, dresscode, this.state.page*12, 12);
         this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
         let LP = Math.ceil(data.count / 12 - 1)
         this.setState({block: false,
@@ -113,7 +113,11 @@ class Outfits extends React.Component {
     changePage = (page) => async () => {
         if (page >= 0 && page <= this.state.lastPage) {
             this.setState({page, block: true});
-            let data = await getCollage(this.state.option, page * 12);
+            let category = this.state.option === "Категории" ? "" : this.state.option;
+            let dresscode = this.state.dresscode === "Дресс-код" ? "" : this.state.dresscode;
+            let season = this.state.season === "Сезон" ? "" : this.state.season;
+            let style = this.state.style === "Стиль" ? "" : this.state.style;
+            let data = await getCollage(style, season, dresscode, page * 12);
             let LP = Math.ceil(data.count / 12 - 1)
             this.setState({
                 block: false,

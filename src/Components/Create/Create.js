@@ -52,7 +52,7 @@ class Create extends React.Component {
     }
 
     changePage = (page) => async () => {
-        if (page >= 0) {
+        if (page >= 0 && page <= this.state.lastPage) {
             this.setState({page, block: true});
             let data = await getThing(this.state.option, page * 12);
             let LP = Math.ceil(data.count / 12 - 1);

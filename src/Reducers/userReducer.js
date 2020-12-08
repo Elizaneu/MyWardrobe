@@ -1,10 +1,10 @@
 import {deleteUser, editUser, getAuth, getUser, login, logout, register} from "../API/UserAPI";
 
-export const SET_AUTH = "SET_AUTH_USER_REDUCER"
-export const SET_CREATE = "SET_CREATE_USER_REDUCER"
-export const SET_MESSAGE = "SET_MESSAGE_USER_REDUCER"
-export const SET_CURRENT_USER = "SET_CURRENT_USER_REDUCER"
-export const SET_UPDATE = "SET_UPDATE_USER_REDUCER"
+const SET_AUTH = "SET_AUTH_USER_REDUCER"
+const SET_CREATE = "SET_CREATE_USER_REDUCER"
+const SET_MESSAGE = "SET_MESSAGE_USER_REDUCER"
+const SET_CURRENT_USER = "SET_CURRENT_USER_REDUCER"
+const SET_UPDATE = "SET_UPDATE_USER_REDUCER"
 
 const initialState = {
     isAuth: true,

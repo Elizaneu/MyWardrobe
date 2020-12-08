@@ -39,8 +39,4 @@ export const CreateThing = (Photo, Category) => async (dispatch) => {
     }
 }
 
-
-
-
-
 export default thingReducer
