@@ -16,20 +16,25 @@
 .main_text1 {
     text-align: center;
     font-size: 40px;
-    font-family: 'Poiret One', cursive;
+    font-family: 'Noto Serif', serif;
+    font-style: italic;
 }
 
 .main_text2 {
     text-align: center;
     font-size: 20px;
-    font-family: 'Poiret One', cursive;
+    font-family: 'Noto Serif', serif;
+    font-style: italic;
 }
-
 
 @font-face {
-    font-family: 'Poiret One', cursive;
-    src: url(https://fonts.googleapis.com/css2?family=Poiret+One&display=swap);
+    font-family: 'Noto Serif', serif;
+    src: url(https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,400;0,700;1,400;1,700&display=swap);
 }
+/*@font-face {*/
+/*    font-family: 'Poiret One', cursive;*/
+/*    src: url(https://fonts.googleapis.com/css2?family=Poiret+One&display=swap);*/
+/*}*/
 
 .gallery {
     padding-left: 500px;
