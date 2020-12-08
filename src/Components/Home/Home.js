@@ -1,36 +1,8 @@
 import React from "react";
 import c from "./Home.module.css";
 import Header from "../Header/Header";
-import img1 from "../../assets/image/Gallery/img1.jpg";
-import img2 from "../../assets/image/Gallery/img2.jpg";
-import img3 from "../../assets/image/Gallery/img3.jpg";
-import img4 from "../../assets/image/Gallery/img4.jpg";
-import img5 from "../../assets/image/Gallery/img5.jpg";
-import img6 from "../../assets/image/Gallery/img6.jpg";
 import logo from "../../assets/image/logo.svg"
 import {getCollageAll} from "../../API/CollageAPI";
-
-
-const Gallery = [
-    {
-        photo: img1,
-    },
-    {
-        photo: img2,
-    },
-    {
-        photo: img3,
-    },
-    {
-        photo: img4,
-    },
-    {
-        photo: img5,
-    },
-    {
-        photo: img6,
-    },
-]
 
 class Home extends React.Component {
     state = {
