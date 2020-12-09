@@ -23,13 +23,24 @@ export const createCollage = (Photo, Style, Dresscode, Season, Things) => {
     })
 }
 
-export const getCollage = (Style = "", Season = "", Dresscode = "", Offset = 0, Limit = 12) => {
-    return ms.get(`/collage/?offset=${Offset}&limit=${Limit}&style=${Style}&season=${Season}&dresscode=${Dresscode}`).then(res=>res.data)
+export const getCollage = (Style = "", Season = "", Dresscode = "", Offset = 0, Limit = 12, Sort = "Likes") => {
+    return ms.get(`/collage/?offset=${Offset}&limit=${Limit}&style=${Style}&season=${Season}&dresscode=${Dresscode}&sort=${Sort}`).then(res=>res.data)
+}
+
+export const getCollageCategory = (Category = "", Offset= 0, Limit = 6, Sort = "Likes") => {
+    return ms.get(`/collage/${Category}?offset=${Offset}&limit=${Limit}&sort=${Sort}`).then(res=>res.data)
 }
 
 export const getCollageAll = (Style = "", Season = "", Dresscode = "", Sort = "Likes", Offset = 0, Limit = 6) => {
-    return ms.get(`/collage/all/?offset=${Offset}&
-    limit=${Limit}&style=${Style}&season=${Season}&dresscode=${Dresscode}&sort=${Sort}`).then(res=>res.data)
+    return ms.get(`/collage/all/?offset=${Offset}&limit=${Limit}&style=${Style}&season=${Season}&dresscode=${Dresscode}&sort=${Sort}`).then(res=>res.data)
+}
+
+export const getCollageAllCategory = (Category = "", Offset= 0, Limit = 6, Sort = "Likes") => {
+    return ms.get(`/collage/all/${Category}?offset=${Offset}&limit=${Limit}&sort=${Sort}`).then(res=>res.data)
+}
+
+export const getLikedCollage = (Style = "", Season = "", Dresscode = "", Sort = "Likes", Offset = 0, Limit = 12) => {
+    return ms.get(`/like/collage/?offset=${Offset}&limit=${Limit}&style=${Style}&season=${Season}&dresscode=${Dresscode}&sort=${Sort}`).then(res=>res.data)
 }
 
 export const deleteCollage = (idCollage) => {
@@ -37,7 +48,7 @@ export const deleteCollage = (idCollage) => {
 }
 
 export const likeCollage = (id) => {
-    return ms.get(`/like/collage/${id}`).then(res=>res.data)
+    return ms.post(`/like/collage/${id}`).then(res=>res.data)
 }
 
 export const deleteLike = (id) => {
