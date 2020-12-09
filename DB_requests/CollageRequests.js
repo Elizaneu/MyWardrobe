@@ -14,7 +14,7 @@ exports.getCountCollages = (id, style, season, dresscode) => {
     });
 };
 
-exports.getCollages = (id, style, season, dresscode, limit, offset) => {
+exports.getCollages = (id, style, season, dresscode, sort, limit, offset) => {
     return new Promise((resolve, reject) => {
         const {mysql} = require('./../index');
 
@@ -22,7 +22,7 @@ exports.getCollages = (id, style, season, dresscode, limit, offset) => {
             `Style=${style ? `'${style}'` : `Style`} AND ` +
             `Season=${season ? `'${season}'` : `Season`} AND ` +
             `Dresscode=${dresscode ? `'${dresscode}'` : `Dresscode`} ` +
-            `ORDER BY CreationDate DESC LIMIT ${limit} OFFSET ${offset};`;
+            `ORDER BY ${sort} DESC LIMIT ${limit} OFFSET ${offset};`;
 
         mysql.query(query,
             (error, result) => {

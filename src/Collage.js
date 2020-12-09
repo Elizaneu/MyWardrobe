@@ -1,42 +1,66 @@
 const {UserLikeCollage} = require("../DB_requests/LikeCollageRequests");
-const {getCountCollages, getCollages, createCollage,
+const {
+    getCountCollages, getCollages, createCollage,
     addThingToCollage, deleteCollage, getCountAllCollages,
-    getAllCollages, getThingsInCollage} = require("../DB_requests/CollageRequests");
+    getAllCollages, getThingsInCollage
+} = require("../DB_requests/CollageRequests");
 const {decode, auth} = require("./Hash");
 
-exports.getCollages = async (req, res) =>{
+exports.getCollages = async (req, res) => {
     if (!await auth(req.cookies.token)) {
         res.sendStatus(401);
         return;
     }
     const id = decode(req.cookies.token);
-    let limit = 10, offset = 0, style = "", season = "", dresscode = "";
+    let limit = 10, offset = 0, style = "", season = "", dresscode = "", sort = "CreationDate";
 
-    if (req.query.style != null) {style = req.query.style;}
-    if (req.query.season != null) {season = req.query.season;}
-    if (req.query.dresscode != null) {dresscode = req.query.dresscode;}
-    if (req.query.limit != null) {limit = req.query.limit;}
-    if (req.query.offset != null) {offset = req.query.offset;}
+    if (req.query.style != null) {
+        style = req.query.style;
+    }
+    if (req.query.season != null) {
+        season = req.query.season;
+    }
+    if (req.query.dresscode != null) {
+        dresscode = req.query.dresscode;
+    }
+    if (req.query.sort != null) {
+        sort = req.query.sort;
+    }
+    if (req.query.limit != null) {
+        limit = req.query.limit;
+    }
+    if (req.query.offset != null) {
+        offset = req.query.offset;
+    }
 
-    try{
+    if (sort && sort !== "Likes" && sort !== "Dresscode"
+        && sort !== "Season" && sort !== "CreationDate" && sort !== "Style") {
+        res.status(400).json({
+            error: "sort is not valid"
+        });
+        return;
+    }
+    if (sort === "") sort = null;
+
+    try {
         let count = await getCountCollages(id, style, season, dresscode);
-        let data = await getCollages(id, style, season, dresscode, limit, offset);
+        let data = await getCollages(id, style, season, dresscode, sort, limit, offset);
         const rows = [];
 
         for (const u of data) {
             let th = await getThingsInCollage(u.idCollage);
             let isLike = await UserLikeCollage(id, u.idCollage);
-            rows.push({...u, Photo: u.Photo.toString('base64'), Things:th, isLike})
+            rows.push({...u, Photo: u.Photo.toString('base64'), Things: th, isLike})
         }
         res.json({count, rows});
-    }catch (e) {
+    } catch (e) {
         res.status(500).json({
             error: e.sqlMessage
         });
     }
 };
 
-exports.createCollage = async (req, res) =>{
+exports.createCollage = async (req, res) => {
     if (!await auth(req.cookies.token)) {
         res.sendStatus(401);
         return;
@@ -51,7 +75,7 @@ exports.createCollage = async (req, res) =>{
             });
             return;
         }
-    }catch (e) {
+    } catch (e) {
         res.status(400).json({
             isCreated: false,
             error: "request type is not form-data"
@@ -61,7 +85,7 @@ exports.createCollage = async (req, res) =>{
 
     try {
         JSON.parse(req.body.Things)
-    }catch (e) {
+    } catch (e) {
         res.status(400).json({
             isCreated: false,
             error: "Things is not array"
@@ -75,11 +99,11 @@ exports.createCollage = async (req, res) =>{
         let data = await createCollage(id, req.body.Style, req.body.Dresscode, req.body.Season, file.data, "#");
 
         for (const id of JSON.parse(req.body.Things)) {
-           await addThingToCollage(data.insertId, id);
+            await addThingToCollage(data.insertId, id);
         }
 
         res.status(201).json({isCreated: true});
-    }catch (e) {
+    } catch (e) {
         res.status(500).json({
             isCreated: false,
             error: e.sqlMessage
@@ -87,7 +111,7 @@ exports.createCollage = async (req, res) =>{
     }
 };
 
-exports.deleteCollage = async (req, res) =>{
+exports.deleteCollage = async (req, res) => {
     if (!await auth(req.cookies.token)) {
         res.sendStatus(401);
         return;
@@ -105,7 +129,7 @@ exports.deleteCollage = async (req, res) =>{
         res.json({
             isDeleted: true
         });
-    }catch (e) {
+    } catch (e) {
         res.status(500).json({
             isDeleted: false,
             error: e.sqlMessage
@@ -116,22 +140,36 @@ exports.deleteCollage = async (req, res) =>{
 exports.getAllCollage = async (req, res) => {
     let limit = 10, offset = 0, style = "", season = "", dresscode = "", sort = "";
 
-    if (req.query.style != null) {style = req.query.style;}
-    if (req.query.season != null) {season = req.query.season;}
-    if (req.query.dresscode != null) {dresscode = req.query.dresscode;}
-    if (req.query.sort != null) {sort = req.query.sort;}
-    if (req.query.limit != null) {limit = req.query.limit;}
-    if (req.query.offset != null) {offset = req.query.offset;}
-
-    if (sort === "") sort = null;
-    if (sort && sort && "Likes" && sort !== "Dresscode"
-        && sort !== "Season" && sort !== "CreationDate" && sort !== "Style"){
-        res.status(400).json({
-            error:"sort is not valid"
-        })
+    if (req.query.style != null) {
+        style = req.query.style;
+    }
+    if (req.query.season != null) {
+        season = req.query.season;
+    }
+    if (req.query.dresscode != null) {
+        dresscode = req.query.dresscode;
+    }
+    if (req.query.sort != null) {
+        sort = req.query.sort;
+    }
+    if (req.query.limit != null) {
+        limit = req.query.limit;
+    }
+    if (req.query.offset != null) {
+        offset = req.query.offset;
     }
 
-    try{
+
+    if (sort && sort !== "Likes" && sort !== "Dresscode"
+        && sort !== "Season" && sort !== "CreationDate" && sort !== "Style") {
+        res.status(400).json({
+            error: "sort is not valid"
+        });
+        return;
+    }
+    if (sort === "") sort = null;
+
+    try {
         let count = await getCountAllCollages(style, season, dresscode);
         let data = await getAllCollages(style, season, dresscode, sort, limit, offset);
         const rows = [];
@@ -142,13 +180,13 @@ exports.getAllCollage = async (req, res) => {
         for (const u of data) {
             let th = await getThingsInCollage(u.idCollage);
             let isLike = false;
-            if (id){
+            if (id) {
                 isLike = await UserLikeCollage(id, u.idCollage);
             }
-            rows.push({...u, Photo: u.Photo.toString('base64'), Things:th, isLike})
+            rows.push({...u, Photo: u.Photo.toString('base64'), Things: th, isLike})
         }
         res.json({count, rows});
-    }catch (e) {
+    } catch (e) {
         res.status(500).json({
             error: e.sqlMessage
         });

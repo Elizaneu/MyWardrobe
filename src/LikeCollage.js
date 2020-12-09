@@ -1,6 +1,61 @@
+const {getThingsInCollage} = require("../DB_requests/CollageRequests");
 const {increaseCountLikeAtCollage,decreaseCountLikeAtCollage,
-    addUserByLike, deleteUserByLike, UserLikeCollage} = require("../DB_requests/LikeCollageRequests");
+    addUserByLike, deleteUserByLike, UserLikeCollage, getLikedCollages} = require("../DB_requests/LikeCollageRequests");
 const {decode, auth} = require("./Hash");
+
+exports.likedCollages = async (req, res) => {
+    if (!await auth(req.cookies.token)) {
+        res.sendStatus(401);
+        return;
+    }
+    const id = decode(req.cookies.token);
+    let limit = 10, offset = 0, style = "", season = "", dresscode = "", sort = "CreationDate";
+
+    if (req.query.style != null) {
+        style = req.query.style;
+    }
+    if (req.query.season != null) {
+        season = req.query.season;
+    }
+    if (req.query.dresscode != null) {
+        dresscode = req.query.dresscode;
+    }
+    if (req.query.sort != null) {
+        sort = req.query.sort;
+    }
+    if (req.query.limit != null) {
+        limit = req.query.limit;
+    }
+    if (req.query.offset != null) {
+        offset = req.query.offset;
+    }
+
+    if (sort && sort !== "Likes" && sort !== "Dresscode"
+        && sort !== "Season" && sort !== "CreationDate" && sort !== "Style") {
+        res.status(400).json({
+            error: "sort is not valid"
+        });
+        return;
+    }
+    if (sort === "") sort = null;
+
+    try{
+        let data = await getLikedCollages(id, style, season, dresscode, sort, limit, offset);
+        const rows = [];
+
+        for (const u of data) {
+            let th = await getThingsInCollage(u.idCollage);
+            let isLike = await UserLikeCollage(id, u.idCollage);
+            rows.push({...u, Photo: u.Photo.toString('base64'), Things: th, isLike})
+        }
+        res.json({rows});
+    }catch (e) {
+        res.status(500).json({
+            error: e.sqlMessage
+        });
+    }
+
+};
 
 exports.likeCollage = async (req, res) =>{
     if (!await auth(req.cookies.token)) {
