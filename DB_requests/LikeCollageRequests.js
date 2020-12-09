@@ -61,6 +61,25 @@ exports.deleteUserByLike = (UserID, CollageID) => {
     });
 };
 
+exports.getCountLikedCollages = (UserID, style, season, dresscode) => {
+    return new Promise((resolve, reject) => {
+        const {mysql} = require('./../index');
+
+        const query =
+            `SELECT COUNT(g.idCollage)
+            FROM user p, collage g, user_liked_collage t
+            WHERE p.idUser = ${UserID} AND g.idCollage = t.CollageID AND p.idUser = t.UserID AND `+
+            `Style=${style !== "" ? `'${style}'` : `Style`} AND ` +
+            `Season=${season !== "" ? `'${season}'` : `Season`} AND ` +
+            `Dresscode=${dresscode !== "" ? `'${dresscode}'` : `Dresscode`}`;
+        mysql.query(query,
+            (error, result) => {
+                if (error) reject(error);
+                else resolve(result[0]["COUNT(g.idCollage)"])
+            })
+    });
+};
+
 exports.getLikedCollages = (UserID, style, season, dresscode, sort, limit, offset) => {
     return new Promise((resolve, reject) => {
         const {mysql} = require('./../index');

@@ -1,6 +1,6 @@
 const {getThingsInCollage} = require("../DB_requests/CollageRequests");
 const {increaseCountLikeAtCollage,decreaseCountLikeAtCollage,
-    addUserByLike, deleteUserByLike, UserLikeCollage, getLikedCollages} = require("../DB_requests/LikeCollageRequests");
+    addUserByLike, deleteUserByLike, UserLikeCollage, getLikedCollages, getCountLikedCollages} = require("../DB_requests/LikeCollageRequests");
 const {decode, auth} = require("./Hash");
 
 exports.likedCollages = async (req, res) => {
@@ -40,6 +40,7 @@ exports.likedCollages = async (req, res) => {
     if (sort === "") sort = null;
 
     try{
+        let count = await getCountLikedCollages(id, style, season, dresscode);
         let data = await getLikedCollages(id, style, season, dresscode, sort, limit, offset);
         const rows = [];
 
@@ -48,7 +49,7 @@ exports.likedCollages = async (req, res) => {
             let isLike = await UserLikeCollage(id, u.idCollage);
             rows.push({...u, Photo: u.Photo.toString('base64'), Things: th, isLike})
         }
-        res.json({rows});
+        res.json({count, rows});
     }catch (e) {
         res.status(500).json({
             error: e.sqlMessage
