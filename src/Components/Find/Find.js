@@ -3,17 +3,16 @@ import c from "./Find.module.css";
 import Header from "../Header/Header";
 import logo from "../../assets/image/logo.svg";
 import withAuthRedirect from "../../HOC/withAuthRedirect";
-import {Categories} from "../../Lists/Categories";
 import {Criterion} from "./Criterion";
 import {Category} from "./Category";
-import {deleteLike, getCollageAll, likeCollage} from "../../API/CollageAPI";
+import {deleteLike, getCollageAll, getCollageAllCategory, likeCollage} from "../../API/CollageAPI";
 import {Element} from "./Element";
 
 
 class Find extends React.Component {
 
     state = {
-        option: Categories[0].option,
+        category: "",
         search: 1,
         sort: "Likes",
         Photos: [],
@@ -28,15 +27,21 @@ class Find extends React.Component {
     }
 
     componentDidMount() {
-        this.getCollages("", "", "")
+        this.getCollages()
     }
 
     onChangeValue = async (e) => {
-        this.setState({search: Number(e.target.value)})
+        await this.setState({search: Number(e.target.value)})
+        this.getCollages()
     }
 
-    getCollages = async (Style, Season, Dresscode, Sort = "Likes", Offset = 0, Limit = 6) => {
-        let data = await getCollageAll(Style, Season, Dresscode, Sort, Offset, Limit)
+    getCollages = async () => {
+        let data;
+        if (this.state.search === 1)
+            data = await getCollageAll(this.state.style, this.state.season,
+                this.state.dresscode, this.state.sort, this.state.offset, 6)
+        else
+            data = await getCollageAllCategory(this.state.category,this.state.offset, 6, this.state.sort)
         this.setState({Photos: data.rows, count: data.count})
         let LP = Math.ceil(this.state.count / 6 - 1);
         this.setState({
@@ -76,22 +81,24 @@ class Find extends React.Component {
     }
 
     changeSort = async (e) => {
-        await this.setState({sort: e.target.value})
-        this.getCollages(this.state.style, this.state.season,
-            this.state.dresscode, this.state.sort, this.state.offset)
+        await this.setState({sort: e.target.value, offset: 0, page: 0});
+        this.getCollages();
     }
 
     onChangeCriterion = (key, value) => async () => {
         await this.setState({[key]: this.state[key] === value ? "" : value});
-        this.getCollages(this.state.style, this.state.season,
-            this.state.dresscode, this.state.sort, this.state.offset);
+        this.getCollages();
+    }
+
+    onChangeCategory = (value) => async () => {
+        await this.setState({category: this.state.category === value ? "" : value});
+        this.getCollages();
     }
 
     changePage = (page) => async () => {
         if (page >= 0 && page <= this.state.lastPage) {
             await this.setState({page, block: true, offset: page*6});
-            this.getCollages(this.state.style,
-                this.state.season, this.state.dresscode, this.state.sort, this.state.offset)
+            this.getCollages()
         }
     };
 
@@ -114,7 +121,9 @@ class Find extends React.Component {
                             dresscode={this.state.dresscode}
                             season={this.state.season}
                             onChangeCriterion={this.onChangeCriterion}/>}
-                        {this.state.search === 0 && <Category/>}
+                        {this.state.search === 0 && <Category
+                        onChangeCategory={this.onChangeCategory}
+                        category={this.state.category}/>}
                     </div>
                     <div className={c.searchResult}>
                         <select value={this.state.sort} onChange={this.changeSort}
