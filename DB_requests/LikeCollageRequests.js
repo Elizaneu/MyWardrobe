@@ -66,7 +66,7 @@ exports.getCountLikedCollages = (UserID, style, season, dresscode) => {
         const {mysql} = require('./../index');
 
         const query =
-            `SELECT COUNT(g.idCollage)
+            `SELECT COUNT(DISTINCT g.idCollage)
             FROM user p, collage g, user_liked_collage t
             WHERE p.idUser = ${UserID} AND g.idCollage = t.CollageID AND p.idUser = t.UserID AND `+
             `Style=${style !== "" ? `'${style}'` : `Style`} AND ` +
@@ -85,7 +85,7 @@ exports.getLikedCollages = (UserID, style, season, dresscode, sort, limit, offse
         const {mysql} = require('./../index');
 
         const query =
-            `SELECT g.*
+            `SELECT DISTINCT g.*
             FROM user p, collage g, user_liked_collage t
             WHERE p.idUser = ${UserID} AND g.idCollage = t.CollageID AND p.idUser = t.UserID AND `+
             `Style=${style !== "" ? `'${style}'` : `Style`} AND ` +

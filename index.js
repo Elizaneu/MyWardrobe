@@ -12,7 +12,7 @@ const cors = require('cors');
 const {createUser, getUser, deleteUser, editUser} = require("./src/User");
 const {isAuth, login, logout} = require("./src/Auth");
 const {getThings, createThing, deleteThing} = require("./src/Thing");
-const {getCollages, createCollage, deleteCollage, getAllCollage} = require("./src/Collage");
+const {getCollages, createCollage, deleteCollage, getAllCollage, getCollagesByCategory, getAllCollagesByCategory} = require("./src/Collage");
 const{likeCollage, deleteLikeCollage, likedCollages} = require("./src/LikeCollage");
 
 //connect to mysql serv
@@ -58,9 +58,11 @@ serv.delete("/thing/:id", deleteThing);
 
 //CollageAPI
 serv.get("/collage/", getCollages);
+serv.get("/collage/:category", getCollagesByCategory);
 serv.post("/collage/", createCollage);
 serv.delete("/collage/:id", deleteCollage);
 serv.get("/collage/all", getAllCollage);
+serv.get("/collage/all/:category", getAllCollagesByCategory);
 
 //LikeCollageAPI
 serv.get("/like/collage/", likedCollages);

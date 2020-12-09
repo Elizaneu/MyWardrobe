@@ -32,6 +32,41 @@ exports.getCollages = (id, style, season, dresscode, sort, limit, offset) => {
     });
 };
 
+exports.getCountCollagesByCategory = (id, category) => {
+    return new Promise((resolve, reject) => {
+        const {mysql} = require('./../index');
+
+        let query = `select  count(DISTINCT c.idCollage)
+            from collage c, thing t, things_in_collage p
+            where t.Category = '${category}' and t.idThing = p.ThingID and c.idCollage = p.CollageID and c.UserID = ${id}`;
+
+        mysql.query(query,
+            (error, result) => {
+                if (error) reject(error);
+                else resolve(result[0]['count(DISTINCT c.idCollage)'])
+            })
+    });
+};
+
+
+exports.getCollagesByCategory = (id, category, sort, limit, offset) => {
+    return new Promise((resolve, reject) => {
+        const {mysql} = require('./../index');
+
+        let query = `select DISTINCT  c.*
+            from collage c, thing t, things_in_collage p
+            where t.Category = '${category}' and t.idThing = p.ThingID and c.idCollage = p.CollageID and c.UserID = ${id} ` +
+            `ORDER BY ${sort} DESC LIMIT ${limit} OFFSET ${offset};`;
+
+        mysql.query(query,
+            (error, result) => {
+                if (error) reject(error);
+                else resolve(result)
+            })
+    });
+};
+
+
 exports.createCollage = (UserID, Style, Dresscode, Season, Photo, PhotoLink) => {
     return new Promise((resolve, reject) => {
         const {mysql} = require('./../index');
@@ -98,6 +133,40 @@ exports.getAllCollages = (style, season, dresscode, sort, limit, offset) => {
             `Style=${style ? `'${style}'` : `Style`} AND ` +
             `Season=${season ? `'${season}'` : `Season`} AND ` +
             `Dresscode=${dresscode ? `'${dresscode}'` : `Dresscode`} ` +
+            `ORDER BY ${sort} DESC LIMIT ${limit} OFFSET ${offset};`;
+
+        mysql.query(query,
+            (error, result) => {
+                if (error) reject(error);
+                else resolve(result)
+            })
+    });
+};
+
+exports.getCountAllCollagesByCategory = (category) => {
+    return new Promise((resolve, reject) => {
+        const {mysql} = require('./../index');
+
+        let query = `select  count(DISTINCT c.idCollage)
+            from collage c, thing t, things_in_collage p
+            where t.Category = '${category}' and t.idThing = p.ThingID and c.idCollage = p.CollageID`;
+
+        mysql.query(query,
+            (error, result) => {
+                if (error) reject(error);
+                else resolve(result[0]['count(DISTINCT c.idCollage)'])
+            })
+    });
+};
+
+
+exports.getAllCollagesByCategory = (category, sort, limit, offset) => {
+    return new Promise((resolve, reject) => {
+        const {mysql} = require('./../index');
+
+        let query = `select DISTINCT  c.*
+            from collage c, thing t, things_in_collage p
+            where t.Category = '${category}' and t.idThing = p.ThingID and c.idCollage = p.CollageID ` +
             `ORDER BY ${sort} DESC LIMIT ${limit} OFFSET ${offset};`;
 
         mysql.query(query,

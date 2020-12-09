@@ -2,7 +2,8 @@ const {UserLikeCollage} = require("../DB_requests/LikeCollageRequests");
 const {
     getCountCollages, getCollages, createCollage,
     addThingToCollage, deleteCollage, getCountAllCollages,
-    getAllCollages, getThingsInCollage
+    getAllCollages, getThingsInCollage,getCollagesByCategory,
+    getCountCollagesByCategory, getCountAllCollagesByCategory, getAllCollagesByCategory
 } = require("../DB_requests/CollageRequests");
 const {decode, auth} = require("./Hash");
 
@@ -45,6 +46,52 @@ exports.getCollages = async (req, res) => {
     try {
         let count = await getCountCollages(id, style, season, dresscode);
         let data = await getCollages(id, style, season, dresscode, sort, limit, offset);
+        const rows = [];
+
+        for (const u of data) {
+            let th = await getThingsInCollage(u.idCollage);
+            let isLike = await UserLikeCollage(id, u.idCollage);
+            rows.push({...u, Photo: u.Photo.toString('base64'), Things: th, isLike})
+        }
+        res.json({count, rows});
+    } catch (e) {
+        res.status(500).json({
+            error: e.sqlMessage
+        });
+    }
+};
+
+exports.getCollagesByCategory = async (req, res) => {
+    if (!await auth(req.cookies.token)) {
+        res.sendStatus(401);
+        return;
+    }
+    const id = decode(req.cookies.token);
+    const category = req.params.category;
+
+    let limit = 10, offset = 0, sort = "CreationDate";
+
+    if (req.query.sort != null) {
+        sort = req.query.sort;
+    }
+    if (req.query.limit != null) {
+        limit = req.query.limit;
+    }
+    if (req.query.offset != null) {
+        offset = req.query.offset;
+    }
+
+    if (sort && sort !== "Likes" && sort !== "Dresscode"
+        && sort !== "Season" && sort !== "CreationDate" && sort !== "Style") {
+        res.status(400).json({
+            error: "sort is not valid"
+        });
+        return;
+    }
+    if (sort === "") sort = null;
+    try {
+        let count = await getCountCollagesByCategory(id, category);
+        let data = await getCollagesByCategory(id, category, sort, limit, offset);
         const rows = [];
 
         for (const u of data) {
@@ -173,6 +220,54 @@ exports.getAllCollage = async (req, res) => {
         let count = await getCountAllCollages(style, season, dresscode);
         let data = await getAllCollages(style, season, dresscode, sort, limit, offset);
         const rows = [];
+        let id = null;
+        if (await auth(req.cookies.token)) {
+            id = decode(req.cookies.token);
+        }
+        for (const u of data) {
+            let th = await getThingsInCollage(u.idCollage);
+            let isLike = false;
+            if (id) {
+                isLike = await UserLikeCollage(id, u.idCollage);
+            }
+            rows.push({...u, Photo: u.Photo.toString('base64'), Things: th, isLike})
+        }
+        res.json({count, rows});
+    } catch (e) {
+        res.status(500).json({
+            error: e.sqlMessage
+        });
+    }
+};
+
+exports.getAllCollagesByCategory = async (req, res) => {
+    const category = req.params.category;
+
+    let limit = 10, offset = 0, sort = "CreationDate";
+
+    if (req.query.sort != null) {
+        sort = req.query.sort;
+    }
+    if (req.query.limit != null) {
+        limit = req.query.limit;
+    }
+    if (req.query.offset != null) {
+        offset = req.query.offset;
+    }
+
+    if (sort && sort !== "Likes" && sort !== "Dresscode"
+        && sort !== "Season" && sort !== "CreationDate" && sort !== "Style") {
+        res.status(400).json({
+            error: "sort is not valid"
+        });
+        return;
+    }
+    if (sort === "") sort = null;
+    try {
+        let count = await getCountAllCollagesByCategory(category);
+        let data = await getAllCollagesByCategory(category, sort, limit, offset);
+        const rows = [];
+
         let id = null;
         if (await auth(req.cookies.token)) {
             id = decode(req.cookies.token);
