@@ -19,8 +19,9 @@
 }
 
 .form_p {
-    left: 20px;
+    left: 0;
     top: 20px;
+    vertical-align: bottom;
     padding: 5px 0 5px 0;
     position: relative;
     display: flex;
@@ -54,10 +55,15 @@
     border-bottom: 1px solid black;
 }
 
+.margin {
+    height: 30px;
+}
+
 .form_label {
-    width: 100px;
+    width: 120px;
     text-align: right;
     font-size: 15px;
+    vertical-align: bottom;
 }
 
 ::placeholder {
@@ -67,10 +73,9 @@
 
 
 .delete {
-    position: absolute;
-    top: 410px;
-    width: 130px;
-    left: calc(50% - 80px);
+    position: relative;
+    width: 150px;
+    left: calc(50% - 190px);
     text-align: left;
     color: black;
     cursor: pointer;

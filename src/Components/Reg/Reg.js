@@ -5,7 +5,7 @@ import logo from "../../assets/image/logo.svg";
 import {Field, reduxForm} from "redux-form";
 import {Register} from "../../Reducers/userReducer";
 import {connect} from "react-redux";
-import {require, maxLength, minLength} from "../../Validate/validators";
+import {require, maxLength, minLength, SpaceCheck} from "../../Validate/validators";
 import Input from "../common/Input/Input";
 
 const maxLength30 = maxLength(30);
@@ -22,28 +22,28 @@ const RegisterForm = reduxForm({form: "reg"})((props) => {
                    errorclassname={c.errorField}
                    name="LastName"
                    type="text"
-                   validate={[require, maxLength30]}
+                   validate={[require, maxLength30, SpaceCheck]}
                    className={c.borders}
                    placeholder="Фамилия"/>
             <Field component={Input}
                    errorclassname={c.errorField}
                    name="FirstName"
                    type="text"
-                   validate={[require, maxLength30]}
+                   validate={[require, maxLength30, SpaceCheck]}
                    className={c.borders}
                    placeholder="Имя"/>
             <Field component={Input}
                    errorclassname={c.errorField}
                    name="Email"
                    type="email"
-                   validate={require}
+                   validate={[require, SpaceCheck]}
                    className={c.borders}
                    placeholder="Электронная почта"/>
             <Field component={Input}
                    errorclassname={c.errorField}
                    name="Password"
                    type="password"
-                   validate={[require, minLength8]}
+                   validate={[require, minLength8, SpaceCheck]}
                    className={c.borders}
                    placeholder="Пароль"/>
             <button className={c.form_btn}

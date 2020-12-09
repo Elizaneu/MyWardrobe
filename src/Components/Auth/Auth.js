@@ -45,9 +45,6 @@ const AuthForm = reduxForm({form: "auth"})((props) => {
             <Link className={c.register} to={"/reg"}>
                 Регистрация
             </Link>
-            <Link className={c.forget_pass} to={"/rec"}>
-                Забыли пароль?
-            </Link>
         </form>
     )
 })

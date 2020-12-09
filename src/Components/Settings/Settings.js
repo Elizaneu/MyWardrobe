@@ -8,7 +8,7 @@ import {Field, reduxForm} from "redux-form";
 import {confirmAlert} from "react-confirm-alert";
 import {DeleteUser, EditUser} from "../../Reducers/userReducer";
 import {connect} from "react-redux";
-import {maxLength, minLength} from "../../Validate/validators";
+import {maxLength, minLength, SpaceCheck} from "../../Validate/validators";
 import Input from "../common/Input/Input";
 
 const maxLength30 = maxLength(30);
@@ -21,7 +21,7 @@ const SettingForm = reduxForm({form: "settings"})((props) => {
             <div className={c.title}>
                 Настройки
             </div>
-            <p className={c.form_p}>
+            <div className={c.form_p}>
                 <label className={c.form_label} htmlFor="firstname">
                     Имя:
                 </label>
@@ -31,10 +31,10 @@ const SettingForm = reduxForm({form: "settings"})((props) => {
                     errorclassname={c.errorField}
                     className={c.form_input}
                     id="firstname"
-                    validate={maxLength30}
+                    validate={[maxLength30, SpaceCheck]}
                     type="text"/>
-            </p>
-            <p className={c.form_p}>
+            </div>
+            <div className={c.form_p}>
                 <label className={c.form_label} htmlFor="lastname">
                     Фамилия:
                 </label>
@@ -44,10 +44,10 @@ const SettingForm = reduxForm({form: "settings"})((props) => {
                     errorclassname={c.errorField}
                     className={c.form_input}
                     id="lastname"
-                    validate={maxLength30}
+                    validate={[maxLength30, SpaceCheck]}
                     type="text"/>
-            </p>
-            <p className={c.form_p}>
+            </div>
+            <div className={c.form_p}>
                 <label className={c.form_label} htmlFor="pw2">
                     Новый пароль:
                 </label>
@@ -56,11 +56,11 @@ const SettingForm = reduxForm({form: "settings"})((props) => {
                     name="Password"
                     errorclassname={c.errorField}
                     className={c.form_input}
-                    validate={minLength8}
+                    validate={[minLength8, SpaceCheck]}
                     id="pw2"
                     type="password"/>
-            </p>
-            <p className={c.form_p}>
+            </div>
+            <div className={c.form_p}>
                 <label className={c.form_label} htmlFor="pw3">
                     Подтвердите пароль:
                 </label>
@@ -68,10 +68,10 @@ const SettingForm = reduxForm({form: "settings"})((props) => {
                     component={Input}
                     name="ConfirmPassword"
                     errorclassname={c.errorField}
-                    className={c.form_input}
+                    className={c.form_input + " " + c.margin}
                     id="pw3"
                     type="password"/>
-            </p>
+            </div>
             <button className={c.form_btn}>
                 Сохранить
             </button>
@@ -96,16 +96,29 @@ class Settings extends React.Component {
         ]
     }
 
-    state ={
+    alertSuccessfulChange = {
+        title: "Редактирование данных",
+        message: "Данные успешно изменены",
+        buttons: [
+            {
+                label: "ОК"
+            }
+        ]
+    }
+
+    state = {
         message:""
     }
 
     Submit = (data) => {
-        if (data.Password === data.ConfirmPassword)
+
+        if (data.Password === data.ConfirmPassword) {
+            confirmAlert(this.alertSuccessfulChange)
             this.props.EditUser(data.LastName || undefined,
                 data.FirstName || undefined,
                 data.Email || undefined,
                 data.Password || undefined)
+        }
         else {
             this.setState({message: "Пароли не совпадают"})
             setTimeout(() => {
@@ -124,7 +137,8 @@ class Settings extends React.Component {
                 <Header/>
                 <SettingForm onSubmit={this.Submit}/>
                 <div className={c.error}>{this.state.message}</div>
-                <span onClick={() => confirmAlert(this.alertSetting)} className={c.delete}>
+                <span onClick={() => confirmAlert(this.alertSetting)}
+                      className={c.delete}>
                     Удалить страницу
                 </span>
             </div>
