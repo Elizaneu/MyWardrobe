@@ -75,7 +75,7 @@ exports.getCountLikedCollages = (UserID, style, season, dresscode) => {
         mysql.query(query,
             (error, result) => {
                 if (error) reject(error);
-                else resolve(result[0]["COUNT(g.idCollage)"])
+                else resolve(result[0]["COUNT(DISTINCT g.idCollage)"])
             })
     });
 };

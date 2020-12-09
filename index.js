@@ -58,10 +58,10 @@ serv.delete("/thing/:id", deleteThing);
 
 //CollageAPI
 serv.get("/collage/", getCollages);
-serv.get("/collage/:category", getCollagesByCategory);
+serv.get("/collage/all", getAllCollage);
 serv.post("/collage/", createCollage);
 serv.delete("/collage/:id", deleteCollage);
-serv.get("/collage/all", getAllCollage);
+serv.get("/collage/:category", getCollagesByCategory);
 serv.get("/collage/all/:category", getAllCollagesByCategory);
 
 //LikeCollageAPI
