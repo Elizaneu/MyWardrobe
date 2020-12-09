@@ -94,7 +94,7 @@ export const Logout = () => async (dispatch) => {
 
 export const Register = (LastName, FirstName, Email, Password) => async (dispatch) => {
     try {
-        let data = await register(LastName.trim(), FirstName.trim(), Email.trim(), Password);
+        let data = await register(LastName, FirstName, Email, Password);
 
         if (!data.isCreated) {
             dispatch(setMessage(data.error));

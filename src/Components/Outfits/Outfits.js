@@ -8,19 +8,20 @@ import {Dresscode} from "../../Lists/Dresscode";
 import {Style} from "../../Lists/Styles";
 import {Season} from "../../Lists/Seasons";
 import {confirmAlert} from "react-confirm-alert";
-import {deleteCollage, getCollage} from "../../API/CollageAPI";
+import {deleteCollage, getCollage, getCollageCategory} from "../../API/CollageAPI";
 
 class Outfits extends React.Component {
     state = {
-        option: "Категории",
+        option: "",
         Photos: [],
+        filter: 1,
         block: false,
         editMod: false,
         page: 0,
         lastPage: 0,
-        style: "Стиль",
-        dresscode: "Дресс-код",
-        season: "Сезон",
+        style: "",
+        dresscode: "",
+        season: "",
     }
 
     confirmDeleteMessage = {
@@ -43,8 +44,14 @@ class Outfits extends React.Component {
             },
             {
                 label: "Нет"
-            }
-        ]
+
+            },
+        ],
+        afterClose: () => {
+            this.setState(state => ({
+                ...state,
+                Photos: this.state.Photos.map(u=>({...u, delete:false}))
+            }))}
     }
 
     alertMessage = {
@@ -56,32 +63,29 @@ class Outfits extends React.Component {
         ]
     }
 
-    async componentDidMount() {
+    getCollages = async () => {
         this.setState({block: true})
-        let dresscode = this.state.dresscode === "Дресс-код" ? "" : this.state.dresscode;
-        let season = this.state.season === "Сезон" ? "" : this.state.season;
-        let style = this.state.style === "Стиль" ? "" : this.state.style;
-        let data = await getCollage(style, season, dresscode);
+        let data;
+        if (this.state.filter === 1)
+            data = await getCollage(this.state.style, this.state.season,
+            this.state.dresscode, this.state.page*12);
+        else
+            data = await getCollageCategory(this.state.option, this.state.page*12, 12);
         this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
         let LP = Math.ceil(data.count / 12 - 1)
         this.setState({block: false,
             lastPage: LP === -1 ? 0 : LP} )
     }
 
+    async componentDidMount() {
+        this.getCollages()
+    }
+
     onChangeValue = (name) => async (e) => {
         await this.setState({
             [name]: e.target.value
         });
-        this.setState({block: true});
-        let category = this.state.option === "Категории" ? "" : this.state.option;
-        let dresscode = this.state.dresscode === "Дресс-код" ? "" : this.state.dresscode;
-        let season = this.state.season === "Сезон" ? "" : this.state.season;
-        let style = this.state.style === "Стиль" ? "" : this.state.style;
-        let data = await getCollage(category, style, season, dresscode, this.state.page*12, 12);
-        this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
-        let LP = Math.ceil(data.count / 12 - 1)
-        this.setState({block: false,
-            lastPage: LP === -1 ? 0 : LP} )
+        this.getCollages()
     }
 
     chooseForDelete = (photoId) => () => {
@@ -102,7 +106,8 @@ class Outfits extends React.Component {
 
     buttonDelete = () => {
         if (this.state.editMod) {
-            confirmAlert(this.confirmDeleteMessage)
+            if (this.state.Photos.find(u=>u.delete===true))
+                confirmAlert(this.confirmDeleteMessage)
         }
         if (!this.state.editMod) {
             confirmAlert(this.alertMessage)
@@ -112,19 +117,16 @@ class Outfits extends React.Component {
 
     changePage = (page) => async () => {
         if (page >= 0 && page <= this.state.lastPage) {
-            this.setState({page, block: true});
-            let category = this.state.option === "Категории" ? "" : this.state.option;
-            let dresscode = this.state.dresscode === "Дресс-код" ? "" : this.state.dresscode;
-            let season = this.state.season === "Сезон" ? "" : this.state.season;
-            let style = this.state.style === "Стиль" ? "" : this.state.style;
-            let data = await getCollage(style, season, dresscode, page * 12);
-            let LP = Math.ceil(data.count / 12 - 1)
-            this.setState({
-                block: false,
-                Photos: data.rows.map(d => ({...d, delete: false})),
-                lastPage: LP === -1 ? 0 : LP})
+            await this.setState({page});
+            this.getCollages()
         }
     };
+
+    onChangeFilter = async () => {
+        await this.setState({filter: this.state.filter === 1 ? 0 : 1, page:0})
+        this.getCollages()
+    }
+
     render() {
         return (
             <div>
@@ -134,58 +136,67 @@ class Outfits extends React.Component {
                         Мои образы
                     </p>
                     <div className={c.mainFrame_topButtons}>
+                        <span className={c.button} onClick={this.onChangeFilter}>
+                            {this.state.filter === 0 ? "Критерии" : "Категории"}
+                        </span>
+                        {this.state.filter === 0 &&
                         <select className={c.button}
-                                value={this.state.option}
-                                required
-                                disabled={this.state.block}
-                                onChange={this.onChangeValue("option")}
-                            >
+                                 value={this.state.option}
+                                 required
+                                 disabled={this.state.block}
+                                 onChange={this.onChangeValue("option")}
+                        >
                             {
-                                <option key={"Категории"}>Категории</option>
+                                <option key={"Категории"} value={""}>Категории</option>
                             }
                             {
                                 Categories.map(u => <option key={u.option}>{u.option}</option>)
                             }
-                        </select>
+                        </select>}
+
+                        {this.state.filter === 1 &&
                         <select className={c.button}
-                                value={this.state.style}
-                                required
-                                disabled={this.state.block}
-                                onChange={this.onChangeValue("style")}
-                            >
+                                 value={this.state.style}
+                                 required
+                                 disabled={this.state.block}
+                                 onChange={this.onChangeValue("style")}
+                        >
                             {
-                                <option key={"Стиль"}>Стиль</option>
+                                <option key={"Стиль"} value={""}>Стиль</option>
                             }
                             {
                                 Style.map(u => <option key={u.option}>{u.option}</option>)
                             }
-                        </select>
+                        </select>}
+
+                        {this.state.filter === 1 &&
                         <select className={c.button}
-                                value={this.state.dresscode}
-                                required
-                                onChange={this.onChangeValue("dresscode")}
-                                disabled={this.state.block}
+                                 value={this.state.dresscode}
+                                 required
+                                 onChange={this.onChangeValue("dresscode")}
+                                 disabled={this.state.block}
                         >
                             {
-                                <option key={"Дресс-код"}>Дресс-код</option>
+                                <option key={"Дресс-код"} value={""}>Дресс-код</option>
                             }
                             {
                                 Dresscode.map(u => <option key={u.option}>{u.option}</option>)
                             }
-                        </select>
+                        </select>}
+                        {this.state.filter === 1 &&
                         <select className={c.button}
-                                value={this.state.season}
-                                required
-                                onChange={this.onChangeValue("season")}
-                                disabled={this.state.block}
+                                 value={this.state.season}
+                                 required
+                                 onChange={this.onChangeValue("season")}
+                                 disabled={this.state.block}
                         >
                             {
-                                <option key={"Сезон"}>Сезон</option>
+                                <option key={"Сезон"} value={""}>Сезон</option>
                             }
                             {
                                 Season.map(u => <option key={u.option}>{u.option}</option>)
                             }
-                        </select>
+                        </select>}
 
                         <span onClick={this.buttonDelete}
                               className={c.button}>

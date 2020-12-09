@@ -40,7 +40,7 @@ class Create extends React.Component {
     }
 
     onChangeValue = async (e) => {
-        this.setState({option: e.target.value})
+        this.setState({option: e.target.value, page: 0})
         this.setState({block: true})
         let data = await getThing(e.target.value);
         this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})

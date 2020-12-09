@@ -11,7 +11,7 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
-        let data = await getCollageAll("", "", "", "Likes", 0, 6)
+        let data = await getCollageAll("", "", "","Likes", 0, 6)
         this.setState({Photos: data.rows, count: data.count})
     }
 
