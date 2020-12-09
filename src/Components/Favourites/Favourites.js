@@ -3,66 +3,125 @@ import c from "./Favourites.module.css";
 import Header from "../Header/Header";
 import withAuthRedirect from "../../HOC/withAuthRedirect";
 import logo from "../../assets/image/logo.svg";
-import img1 from "../../assets/image/Gallery/img1.jpg";
-import img2 from "../../assets/image/Gallery/img2.jpg";
-import img3 from "../../assets/image/Gallery/img3.jpg";
-import img4 from "../../assets/image/Gallery/img4.jpg";
-import img5 from "../../assets/image/Gallery/img5.jpg";
-import img6 from "../../assets/image/Gallery/img6.jpg";
-import img7 from "../../assets/image/Gallery/img7.jpg";
-import img8 from "../../assets/image/Gallery/img8.jpg";
-import img9 from "../../assets/image/Gallery/img9.jpg";
-import img10 from "../../assets/image/Gallery/img10.jpg";
-import img11 from "../../assets/image/Gallery/img11.jpg"
-import img12 from "../../assets/image/Gallery/img12.jpg"
+import {deleteLike, getCollageAll, getLikedCollage, likeCollage} from "../../API/CollageAPI";
+import {Element} from "../Find/Element";
 
-const Favourites = (props) => {
-    return (
-        <div>
-            <Header/>
-            <div className={c.mainFrame}>
-                <p className={c.mainFrame__title}>
-                    Избранное
-                </p>
-                <span className={c.button + " " + c.mainFrame_topButton}>
-                    Выбрать
-                </span>
-                <div className={c.mainFrame_gallery}>
-                    <img className={c.mainFrame_gallery_img} src={img1} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img2} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img3} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img4} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img5} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img6} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img7} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img8} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img9} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img10} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img11} alt={""}/>
-                    <img className={c.mainFrame_gallery_img} src={img12} alt={""}/>
-                </div>
-                <div className={c.mainFrame_bottomButtonsLeft}>
-                    <span className={c.button}>
+
+class Favourites extends React.Component {
+    state = {
+        Photos: [],
+        block: false,
+        editMod: false,
+        page: 0,
+        lastPage: 0
+    }
+
+    async componentDidMount() {
+        this.setState({block: true});
+        let data = await getLikedCollage("","","","Likes",0, 12)
+        this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        let LP = Math.ceil(data.count / 12 - 1)
+        this.setState({
+            block: false,
+            lastPage: LP === -1 ? 0 : LP
+        })
+    }
+
+    changePage = (page) => async () => {
+        if (page >= 0 && page <= this.state.lastPage) {
+            this.setState({page, block: true});
+            let data = await getCollageAll("","","","Likes", page * 12, 12);
+            let LP = Math.ceil(data.count / 12 - 1)
+            this.setState({
+                block: false,
+                Photos: data.rows.map(d => ({...d, delete: false})),
+                lastPage: LP === -1 ? 0 : LP
+            })
+        }
+    };
+
+    onLike = (id) => async () => {
+        if (this.state.Photos.find(u => u.idCollage === id).isLike) {
+            let data = await deleteLike(id);
+            if (data.isDeleteLike) {
+                this.setState(state => ({
+                    ...state,
+                    Photos: state.Photos.map(u => {
+                        if (u.idCollage === id)
+                            return {...u, isLike: false, Likes: u.Likes - 1}
+                        else
+                            return u;
+                    })
+                }))
+            }
+        } else {
+            let data = await likeCollage(id);
+            if (data.isLike) {
+                this.setState(state => ({
+                    ...state,
+                    Photos: state.Photos.map(u => {
+                        if (u.idCollage === id)
+                            return {...u, isLike: true, Likes: u.Likes + 1}
+                        else
+                            return u;
+                    })
+                }))
+            }
+        }
+    }
+
+    render() {
+        return (
+            <div>
+                <Header/>
+                <div className={c.mainFrame}>
+                    <p className={c.mainFrame__title}>
+                        Избранное
+                    </p>
+                    <div className={c.mainFrame_gallery}>
+                        {this.state.Photos.map(u => <Element
+                            key={u.idCollage}
+                            likes={u.Likes}
+                            isLike={u.isLike}
+                            onLike={this.onLike(u.idCollage)}
+                            src={"data:image/png;base64," + u.Photo}
+                            alt=""/>)}
+                    </div>
+                    <div className={c.mainFrame_bottomButtonsLeft}>
+                    <span className={this.state.block || this.state.page === 0
+                        ? c.button + " " + c.button_disabled
+                        : c.button}
+                          onClick={this.changePage(0)}>
                         В начало
                     </span>
-                    <span className={c.button}>
+                        <span onClick={this.changePage(this.state.page - 1)}
+                              className={this.state.block || this.state.page === 0
+                                  ? c.button + " " + c.button_disabled
+                                  : c.button}>
                         Предыдущая
                     </span>
-                </div>
-                <div className={c.mainFrame_bottomButtonsRight}>
-                    <span className={c.button}>
+                    </div>
+                    <div className={c.mainFrame_bottomButtonsRight}>
+                    <span onClick={this.changePage(this.state.page + 1)}
+                          className={this.state.block || this.state.page === this.state.lastPage
+                              ? c.button + " " + c.button_disabled
+                              : c.button}>
                         Следующая
                     </span>
-                    <span className={c.button}>
+                        <span onClick={this.changePage(this.state.lastPage)}
+                              className={this.state.block || this.state.page === this.state.lastPage
+                                  ? c.button + " " + c.button_disabled
+                                  : c.button}>
                         В конец
                     </span>
+                    </div>
+                </div>
+                <div className={c.bottom}>
+                    <img className={c.bottom_icon} src={logo} alt={""}/>
                 </div>
             </div>
-            <div className={c.bottom}>
-                <img className={c.bottom_icon} src={logo} alt={""}/>
-            </div>
-        </div>
-    )
+        )
+    }
 }
 
 export default withAuthRedirect(Favourites);
