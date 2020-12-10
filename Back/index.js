@@ -20,7 +20,7 @@ const mysqlConn = mysql.createConnection({
     host:"localhost",
     user:"root",
     database:"wardrobedb",
-    password:"Lama1200"
+    password:"T2314fHOc7"
 });
 exports.mysql = mysqlConn;
 
