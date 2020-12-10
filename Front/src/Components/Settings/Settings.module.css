@@ -1,0 +1,97 @@
+.icon {
+    position: relative;
+    left: 170px;
+    top: 10px;
+}
+
+.title {
+    position: relative;
+    width: 200px;
+    height: 30px;
+    left: 100px;
+    top: 10px;
+    font-size: 30px;
+    text-align: center;
+    color: white;
+    text-shadow: #C48A69 0.5px 0.5px 0, #C48A69 -0.5px -0.5px 0,
+    #C48A69 -0.5px 0.5px 0, #C48A69 0.5px -0.5px 0;
+    cursor: default;
+}
+
+.form_p {
+    left: 0;
+    top: 20px;
+    vertical-align: bottom;
+    padding: 5px 0 5px 0;
+    position: relative;
+    display: flex;
+}
+
+.form_btn {
+    position: relative;
+    background-color: #C48A69;
+    border: none;
+    width: 160px;
+    left: 120px;
+    height: 30px;
+    outline: none;
+    border-radius: 6px;
+    font-size: 20px;
+    top: 25px;
+    cursor: pointer;
+}
+
+.form_btn:active, .form_btn:hover, .form_btn:focus {
+    background-color: #a96d4a;
+}
+
+.form_input {
+    display: flex;
+    background-color: rgba(196, 138, 105, 0);
+    outline: none;
+    border: none;
+    width: 160px;
+    left: 100px;
+    border-bottom: 1px solid black;
+}
+
+.margin {
+    height: 30px;
+}
+
+.form_label {
+    width: 120px;
+    text-align: right;
+    font-size: 15px;
+    vertical-align: bottom;
+}
+
+::placeholder {
+    font-size: 15px;
+    color: black;
+}
+
+
+.delete {
+    position: relative;
+    width: 150px;
+    left: calc(50% - 190px);
+    text-align: left;
+    color: black;
+    cursor: pointer;
+}
+
+.delete:hover {
+    color: red;
+}
+
+.errorField {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.error {
+    position: relative;
+    text-align: center;
+    font-size: 20px;
+    color: darkred;
+}

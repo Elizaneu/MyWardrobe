@@ -1,0 +1,131 @@
+.canvas {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    border: 1px solid black;
+    margin-top: 20px;
+    margin-left: 50px;
+}
+
+.container {
+    position: absolute;
+    margin-top: 20px;
+    width: 600px;
+    height: 500px;
+    right: 30px;
+}
+
+.categoryButton {
+    padding: 3px 10px;
+    background-color: rgba(196, 138, 105, 0.4);
+    border-radius: 6px;
+    text-align: center;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+.button {
+    padding: 1px 10px;
+    border: 1px solid black;
+    background-color: white;
+    border-radius: 6px;
+    text-align: center;
+    text-decoration: none;
+    color: black;
+    cursor: pointer;
+}
+
+.topButtons {
+    margin-left: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: left;
+    flex-direction: row;
+}
+
+.button_icon {
+    padding-right: 5px;
+}
+
+.button_save {
+    margin-top: 10px;
+    display: flex;
+    width: 74px;
+    cursor: pointer;
+    padding: 3px 10px;
+}
+
+.gallery_img {
+    width: 120px;
+    height: 120px;
+    border: 1px solid black;
+    margin-top: 10px;
+}
+
+.gallery {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr ;
+    grid-template-rows: 1fr 1fr 1fr;
+    width: 100%;
+    justify-items: center;
+}
+
+
+.bottomButtonsLeft {
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    bottom: 0;
+    left: 10px;
+}
+
+.bottomButtonsRight {
+    position: absolute;
+    display: flex;
+    justify-content: space-around;
+    flex-direction: row;
+    bottom: 0;
+    right: 7px;
+}
+
+.margin {
+    margin-right: 10px;
+}
+
+.button:focus, .button:active, .button:hover {
+    background-color: #f6e5dc;
+}
+
+.button_disabled {
+    background-color: #e0dfdf;
+    color: grey;
+    cursor: default;
+}
+
+.button_disabled:hover, .button_disabled:focus {
+    background-color: #e0dfdf;
+}
+
+.chosen{
+    border: 3px solid black;
+}
+
+.criterion {
+    display: flex;
+    width: 300px;
+    cursor: pointer;
+}
+
+.bottom {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 620px;
+    left: 50px;
+}
+
+.bottom_text {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
