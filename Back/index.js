@@ -9,11 +9,11 @@ const cookieParser = require('cookie-parser');
 const cors = require('cors');
 
 //import functions
-const {createUser, getUser, deleteUser, editUser} = require("./src/User");
-const {isAuth, login, logout} = require("./src/Auth");
-const {getThings, createThing, deleteThing} = require("./src/Thing");
-const {getCollages, createCollage, deleteCollage, getAllCollage, getCollagesByCategory, getAllCollagesByCategory} = require("./src/Collage");
-const{likeCollage, deleteLikeCollage, likedCollages} = require("./src/LikeCollage");
+const {createUser, getUser, deleteUser, editUser} = require("./Controllers/User");
+const {isAuth, login, logout} = require("./Controllers/Auth");
+const {getThings, createThing, deleteThing} = require("./Controllers/Thing");
+const {getCollages, createCollage, deleteCollage, getAllCollage, getCollagesByCategory, getAllCollagesByCategory} = require("./Controllers/Collage");
+const{likeCollage, deleteLikeCollage, likedCollages} = require("./Controllers/LikeCollage");
 
 //connect to mysql serv
 const mysqlConn = mysql.createConnection({
