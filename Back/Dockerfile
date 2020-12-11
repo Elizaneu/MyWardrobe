@@ -1,12 +1,12 @@
-FROM node:stretch-slim
+FROM node:14.10.1-alpine3.10
 
-WORKDIR /usr/src/app
+RUN mkdir -p /app
+WORKDIR /app
 
-COPY package*.json ./
+COPY package.json /app
+COPY package-lock.json /app
+COPY . /app
 
 RUN npm install
 
-COPY . .
-
-EXPOSE 8000
 CMD ["node", "index.js"]
