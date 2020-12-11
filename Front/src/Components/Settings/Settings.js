@@ -111,19 +111,24 @@ class Settings extends React.Component {
     }
 
     Submit = (data) => {
-
-        if (data.Password === data.ConfirmPassword) {
-            confirmAlert(this.alertSuccessfulChange)
-            this.props.EditUser(data.LastName || undefined,
-                data.FirstName || undefined,
-                data.Email || undefined,
-                data.Password || undefined)
-        }
-        else {
-            this.setState({message: "Пароли не совпадают"})
+        if (data.Password || data.Email || data.FirstName || data.LastName) {
+            if (data.Password === data.ConfirmPassword) {
+                confirmAlert(this.alertSuccessfulChange)
+                this.props.EditUser(data.LastName || undefined,
+                    data.FirstName || undefined,
+                    data.Email || undefined,
+                    data.Password || undefined)
+            } else {
+                this.setState({message: "Пароли не совпадают"})
+                setTimeout(() => {
+                    this.setState({message: ""})
+                }, 1000);
+            }
+        } else {
+            this.setState({message: "Ни одно поле не заполнено"})
             setTimeout(() => {
                 this.setState({message: ""})
-                }, 1000);
+            }, 1000);
         }
 
     }

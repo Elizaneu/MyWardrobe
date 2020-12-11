@@ -188,15 +188,15 @@ class Create extends React.Component {
 
     onSave = async () => {
         if (this.state.chosenPhotos.length !== 0) {
+            this.setState({block: true})
             const photo = this.ref.current.toDataURL('image/png')
             const file = this.dataURLtoFile(photo, "bla.png")
             let data = await createCollage(file, this.state.style, this.state.dresscode,
                 this.state.season, this.state.chosenPhotos.map(p => p.idThing))
-            console.log(data);
-        } else
-            console.log("oops");
+        }
         await this.setState({chosenPhotos: []});
         this.canvasRender();
+        this.setState({block:false})
     }
 
     render() {
@@ -298,8 +298,9 @@ class Create extends React.Component {
                             }
                         </select>
                     </div>
-                    <span className={this.state.chosenPhotos.length === 0 ? c.button + " " + c.button_save
-                        + " " + c.button_disabled : c.button + " " + c.button_save}
+                    <span className={this.state.chosenPhotos.length === 0 || this.state.block
+                        ? c.button + " " + c.button_save + " " + c.button_disabled
+                        : c.button + " " + c.button_save}
                           onClick={this.onSave}>
                         Сохранить
                     </span>
