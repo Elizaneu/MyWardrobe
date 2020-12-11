@@ -17,10 +17,11 @@ const{likeCollage, deleteLikeCollage, likedCollages} = require("./Controllers/Li
 
 //connect to mysql serv
 const mysqlConn = mysql.createConnection({
-    host: process.env.MYSQL_URL || 'localhost',
-    user: process.env.MYSQL_ROOT_USERNAME || "root",
-    database: "wardrobedb",
-    password: process.env.MYSQL_ROOT_PASSWORD || "T2314fHOc7"
+    host: '85.10.205.173',
+    port: '3306',
+    user: "elizaneu",
+    database: "mywardrobe",
+    password: "T2314fHOc7"
 });
 exports.mysql = mysqlConn;
 
