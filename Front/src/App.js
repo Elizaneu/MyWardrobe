@@ -21,6 +21,8 @@ class App extends React.Component {
     }
 
     render() {
+        if (this.props.error)
+            return <h1 className={"error"}>Ведутся технические работы</h1>
         return (
             <div className="App">
                 <Route exact path="/auth"
@@ -51,6 +53,8 @@ class App extends React.Component {
     }
 }
 
-const mapStateToProps = (state) => ({})
+const mapStateToProps = (state) => ({
+    error: state.error.error
+})
 
 export default connect(mapStateToProps, {IsAuth})(App);

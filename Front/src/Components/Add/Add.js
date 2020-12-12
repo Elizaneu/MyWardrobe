@@ -49,29 +49,34 @@ const AddForm = reduxForm({form: "add"})((props) => {
 })
 
 class Add extends React.Component {
+    state = {
+        value: "Выбрать фото",
+        redirect: false
+    }
 
+    componentDidUpdate(prevProps, prevState, e){
+        if (this.props.isCreated !== prevProps.isCreated && this.props.isCreated) {
+            this.setState({redirect: true})
+            this.props.setCreate(false);
+        }
+    }
 
     Submit = (data) => {
-        //console.log(data);
         this.props.CreateThing(data.Photo, data.Category)
     }
 
-    state = {
-        value: "Выбрать фото"
-    }
+
 
     changeValue = (value) => {
         if (value) {
             this.setState({value})
-
         } else {
             this.setState({value: "Выбрать фото"})
         }
     }
 
     render() {
-        if (this.props.isCreated) {
-            this.props.setCreate(false);
+        if (this.state.redirect) {
             return (
                 <Redirect to='/wardrobe'/>
             )

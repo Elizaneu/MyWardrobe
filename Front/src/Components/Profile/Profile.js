@@ -12,10 +12,17 @@ class Profile extends React.Component {
         Photos: [],
         count: 0,
     }
+    isMount = false;
 
     async componentDidMount() {
+        this.isMount = true;
         let data = await getCollage("", "", "", 0, 6, "Likes")
-        this.setState({Photos: data.rows, count: data.count})
+        if (this.isMount)
+            this.setState({Photos: data.rows, count: data.count})
+    }
+
+    componentWillUnmount() {
+        this.isMount = false;
     }
 
     render() {
@@ -52,7 +59,7 @@ class Profile extends React.Component {
                     </div>
                 </div>
                 <div className={c.bottom}>
-                    <img className={c.icon} src={logo}/>
+                    <img className={c.icon} src={logo} alt=""/>
                     <p className={c.quote}>
                         Создай свой собственный стиль
                     </p>

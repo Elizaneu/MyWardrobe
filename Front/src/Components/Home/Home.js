@@ -9,10 +9,16 @@ class Home extends React.Component {
         Photos: [],
         count: 0,
     }
+    isMount = false;
 
     async componentDidMount() {
+        this.isMount = true;
         let data = await getCollageAll("", "", "","Likes", 0, 6)
-        this.setState({Photos: data.rows, count: data.count})
+        if (this.isMount)
+            this.setState({Photos: data.rows, count: data.count})
+    }
+    componentWillUnmount () {
+        this.isMount = false;
     }
 
     render() {
@@ -37,7 +43,7 @@ class Home extends React.Component {
                     </div>
                 </div>
                 <div className={c.bottom}>
-                    <img className={c.icon} src={logo}/>
+                    <img className={c.icon} src={logo} alt=""/>
                     <p className={c.quote}>
                         Одежда украшает человека
                     </p>

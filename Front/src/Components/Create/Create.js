@@ -10,7 +10,6 @@ import {createCollage} from "../../API/CollageAPI";
 import {Style} from "../../Lists/Styles";
 import {Dresscode} from "../../Lists/Dresscode";
 import {Season} from "../../Lists/Seasons";
-import {saveCollage} from "../../Validate/validators";
 
 class Create extends React.Component {
 
@@ -28,27 +27,34 @@ class Create extends React.Component {
     }
     ref = React.createRef();
 
+    isMount = false;
+
     async componentDidMount() {
+        this.isMount = true;
         this.setState({block: true})
         let data = await getThing(this.state.option);
-        this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        if (this.isMount)
+            this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
         let LP = Math.ceil(data.count / 12 - 1)
-        this.setState({
-            block: false,
-            lastPage: LP === -1 ? 0 : LP
-        })
+        if (this.isMount)
+            this.setState({
+                block: false,
+                lastPage: LP === -1 ? 0 : LP
+            })
     }
 
     onChangeValue = async (e) => {
-        this.setState({option: e.target.value, page: 0})
-        this.setState({block: true})
+        if (this.isMount)
+            this.setState({option: e.target.value, page: 0, block: true})
         let data = await getThing(e.target.value);
-        this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        if (this.isMount)
+            this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
         let LP = Math.ceil(data.count / 12 - 1)
-        this.setState({
-            block: false,
-            lastPage: LP === -1 ? 0 : LP
-        })
+        if (this.isMount)
+            this.setState({
+                block: false,
+                lastPage: LP === -1 ? 0 : LP
+            })
     }
 
     changePage = (page) => async () => {
@@ -56,11 +62,12 @@ class Create extends React.Component {
             this.setState({page, block: true});
             let data = await getThing(this.state.option, page * 12);
             let LP = Math.ceil(data.count / 12 - 1);
-            this.setState({
-                block: false,
-                Photos: data.rows.map(d => ({...d, delete: false})),
-                lastPage: LP === -1 ? 0 : LP
-            });
+            if (this.isMount)
+                this.setState({
+                    block: false,
+                    Photos: data.rows.map(d => ({...d, delete: false})),
+                    lastPage: LP === -1 ? 0 : LP
+                });
         }
     };
 
@@ -191,12 +198,18 @@ class Create extends React.Component {
             this.setState({block: true})
             const photo = this.ref.current.toDataURL('image/png')
             const file = this.dataURLtoFile(photo, "bla.png")
-            let data = await createCollage(file, this.state.style, this.state.dresscode,
+            await createCollage(file, this.state.style, this.state.dresscode,
                 this.state.season, this.state.chosenPhotos.map(p => p.idThing))
         }
-        await this.setState({chosenPhotos: []});
+        if (this.isMount)
+            await this.setState({chosenPhotos: []});
         this.canvasRender();
-        this.setState({block:false})
+        if (this.isMount)
+            this.setState({block: false})
+    }
+
+    componentWillUnmount() {
+        this.isMount = false
     }
 
     render() {
@@ -220,9 +233,9 @@ class Create extends React.Component {
                             }
                         </select>
                         <Link to={"/add"} className={c.button}>
-                        <span>
-                           <img className={c.button_icon} src={plus} alt={""}/>
-                        </span>
+                            <span>
+                                <img className={c.button_icon} src={plus} alt={""}/>
+                            </span>
                             Добавить новый элемент
                         </Link>
                     </div>
@@ -240,22 +253,22 @@ class Create extends React.Component {
                             ? c.button + " " + c.button_disabled + " " + c.margin
                             : c.button + " " + c.margin}
                               onClick={this.changePage(0)}>
-                        В начало
-                    </span>
+                            В начало
+                        </span>
                         <span onClick={this.changePage(this.state.page - 1)}
                               className={this.state.block || this.state.page === 0
                                   ? c.button + " " + c.button_disabled
                                   : c.button}>
-                        Предыдущая
-                    </span>
+                            Предыдущая
+                        </span>
                     </div>
                     <div className={c.bottomButtonsRight}>
                         <span onClick={this.changePage(this.state.page + 1)}
                               className={this.state.block || this.state.page === this.state.lastPage
                                   ? c.button + " " + c.button_disabled + ' ' + c.margin
                                   : c.button + ' ' + c.margin}>
-                        Следующая
-                    </span>
+                            Следующая
+                        </span>
                         <span onClick={this.changePage(this.state.lastPage)}
                               className={this.state.block || this.state.page === this.state.lastPage
                                   ? c.button + " " + c.button_disabled

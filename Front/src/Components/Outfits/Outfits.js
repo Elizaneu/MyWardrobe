@@ -23,6 +23,7 @@ class Outfits extends React.Component {
         dresscode: "",
         season: "",
     }
+    isMount = false;
 
     confirmDeleteMessage = {
         title: "Удаление коллажей",
@@ -71,13 +72,16 @@ class Outfits extends React.Component {
             this.state.dresscode, this.state.page*12);
         else
             data = await getCollageCategory(this.state.option, this.state.page*12, 12);
-        this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        if (this.isMount)
+            this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
         let LP = Math.ceil(data.count / 12 - 1)
-        this.setState({block: false,
-            lastPage: LP === -1 ? 0 : LP} )
+        if (this.isMount)
+            this.setState({block: false,
+                lastPage: LP === -1 ? 0 : LP} )
     }
 
     async componentDidMount() {
+        this.isMount = true;
         this.getCollages()
     }
 
@@ -126,6 +130,11 @@ class Outfits extends React.Component {
         await this.setState({filter: this.state.filter === 1 ? 0 : 1, page:0})
         this.getCollages()
     }
+
+    componentWillUnmount () {
+        this.isMount = false;
+    }
+
 
     render() {
         return (

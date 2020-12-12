@@ -1,4 +1,6 @@
+import {setError} from "./errorReducer"
 import {deleteUser, editUser, getAuth, getUser, login, logout, register} from "../API/UserAPI";
+
 
 const SET_AUTH = "SET_AUTH_USER_REDUCER"
 const SET_CREATE = "SET_CREATE_USER_REDUCER"
@@ -53,42 +55,55 @@ export const setCreate = (isCreated) => ({type: SET_CREATE, isCreated})
 export const setUpdate = (isEdited) => ({type: SET_UPDATE, isEdited})
 
 export const Login = (Email, Password, rememberMe) => async (dispatch) => {
-    let data = await login(Email.trim(), Password, rememberMe);
+    try {
+        let data = await login(Email.trim(), Password, rememberMe);
 
-    if (!data.isAuth) {
-        dispatch(setMessage(data.error))
-        setTimeout(() => {
-            dispatch(setMessage(""))
-        }, 1000)
-    } else {
-        const user = {
-            ...data,
-            isAuth: null
+        if (!data.isAuth) {
+            dispatch(setMessage(data.error))
+            setTimeout(() => {
+                dispatch(setMessage(""))
+            }, 1000)
+        } else {
+            const user = {
+                ...data,
+                isAuth: null
+            }
+            dispatch(setCurrentUser(user));
         }
-        dispatch(setCurrentUser(user));
+        dispatch(setAuth(data.isAuth));
+    } catch (e) {
+        dispatch(setError())
     }
-    dispatch(setAuth(data.isAuth));
 }
 
 export const IsAuth = () => async (dispatch) => {
-    let data = await getAuth();
+    try {
+        let data = await getAuth();
 
-    if (data.isAuth) {
-        const user = {
-            ...data,
-            isAuth: null
+        if (data.isAuth) {
+            const user = {
+                ...data,
+                isAuth: null
+            }
+            dispatch(setCurrentUser(user));
         }
-        dispatch(setCurrentUser(user));
+        dispatch(setAuth(data.isAuth));
+    } catch (e) {
+        dispatch(setError());
     }
-    dispatch(setAuth(data.isAuth));
 }
 
 export const Logout = () => async (dispatch) => {
-    let data = await logout();
+    try {
+        let data = await logout();
 
-    if (!data.isAuth) {
-        dispatch(setAuth(false));
-        dispatch(setCurrentUser({}));
+
+        if (!data.isAuth) {
+            dispatch(setAuth(false));
+            dispatch(setCurrentUser({}));
+        }
+    }catch (e){
+        dispatch(setError())
     }
 }
 
@@ -103,7 +118,7 @@ export const Register = (LastName, FirstName, Email, Password) => async (dispatc
             }, 1000);
         } else
             dispatch(setCreate(data.isCreated))
-    } catch (e){
+    } catch (e) {
         dispatch(setMessage(e.response.data.error));
         setTimeout(() => {
             dispatch(setMessage(""))
@@ -112,18 +127,21 @@ export const Register = (LastName, FirstName, Email, Password) => async (dispatc
 }
 
 export const DeleteUser = () => async (dispatch) => {
-    let data = await deleteUser();
+    try {
+        let data = await deleteUser();
 
-    if (!data.isDeleted) {
-        dispatch(setMessage(data.error));
-        setTimeout(() => {
-            dispatch(setMessage(""))
-        }, 1000);
-    }
-    else {
-        dispatch(setAuth(false))
+        if (!data.isDeleted) {
+            dispatch(setMessage(data.error));
+            setTimeout(() => {
+                dispatch(setMessage(""))
+            }, 1000);
+        } else {
+            dispatch(setAuth(false))
 
-        dispatch(setCurrentUser(undefined))
+            dispatch(setCurrentUser(undefined))
+        }
+    }catch (e){
+        dispatch(setError())
     }
 }
 
@@ -131,17 +149,20 @@ export const EditUser = (LastName = undefined,
                          FirstName = undefined,
                          Email = undefined,
                          Password = undefined) => async (dispatch) => {
-    let data = await editUser(LastName, FirstName, Email, Password);
-    if (!data.isEdited) {
-        dispatch(setMessage(data.error));
-        setTimeout(() => {
-            dispatch(setMessage(""))
-        }, 1000);
-    }
-    else {
-        dispatch(setUpdate(data.isEdited))
-        let user = await getUser()
-        dispatch(setCurrentUser(user))
+    try {
+        let data = await editUser(LastName, FirstName, Email, Password);
+        if (!data.isEdited) {
+            dispatch(setMessage(data.error));
+            setTimeout(() => {
+                dispatch(setMessage(""))
+            }, 1000);
+        } else {
+            dispatch(setUpdate(data.isEdited))
+            let user = await getUser()
+            dispatch(setCurrentUser(user))
+        }
+    }catch (e){
+        dispatch(setError())
     }
 }
 

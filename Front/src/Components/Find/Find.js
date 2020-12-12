@@ -26,7 +26,10 @@ class Find extends React.Component {
         offset: 0,
     }
 
+    isMount = false;
+
     componentDidMount() {
+        this.isMount = true
         this.getCollages()
     }
 
@@ -41,19 +44,21 @@ class Find extends React.Component {
             data = await getCollageAll(this.state.style, this.state.season,
                 this.state.dresscode, this.state.sort, this.state.offset, 6)
         else
-            data = await getCollageAllCategory(this.state.category,this.state.offset, 6, this.state.sort)
-        this.setState({Photos: data.rows, count: data.count})
+            data = await getCollageAllCategory(this.state.category, this.state.offset, 6, this.state.sort)
+        if (this.isMount)
+            this.setState({Photos: data.rows, count: data.count})
         let LP = Math.ceil(this.state.count / 6 - 1);
-        this.setState({
-            block: false,
-            lastPage: LP === -1 ? 0 : LP
-        })
+        if (this.isMount)
+            this.setState({
+                block: false,
+                lastPage: LP === -1 ? 0 : LP
+            })
     }
 
     onLike = (id) => async () => {
         if (this.state.Photos.find(u => u.idCollage === id).isLike) {
             let data = await deleteLike(id);
-            if (data.isDeleteLike) {
+            if (data.isDeleteLike && this.isMount) {
                 this.setState(state => ({
                     ...state,
                     Photos: state.Photos.map(u => {
@@ -66,7 +71,7 @@ class Find extends React.Component {
             }
         } else {
             let data = await likeCollage(id);
-            if (data.isLike) {
+            if (data.isLike && this.isMount) {
                 this.setState(state => ({
                     ...state,
                     Photos: state.Photos.map(u => {
@@ -97,93 +102,99 @@ class Find extends React.Component {
 
     changePage = (page) => async () => {
         if (page >= 0 && page <= this.state.lastPage) {
-            await this.setState({page, block: true, offset: page*6});
+            await this.setState({page, block: true, offset: page * 6});
             this.getCollages()
         }
     };
 
-    render() {
-        return (
-            <div>
-                <Header/>
-                <div className={c.mainFrame}>
-                    <div className={c.searchSpace}>
-                        <select
-                            onChange={this.onChangeValue}
-                            className={c.button__dark}
-                            value={this.state.search}
-                            required>
-                            <option value={1}>По критериям</option>
-                            <option value={0}>По категориям</option>
-                        </select>
-                        {this.state.search === 1 && <Criterion
-                            style={this.state.style}
-                            dresscode={this.state.dresscode}
-                            season={this.state.season}
-                            onChangeCriterion={this.onChangeCriterion}/>}
-                        {this.state.search === 0 && <Category
+    componentWillUnmount() {
+        this.isMount = false
+    }
+
+
+render()
+{
+    return (
+        <div>
+            <Header/>
+            <div className={c.mainFrame}>
+                <div className={c.searchSpace}>
+                    <select
+                        onChange={this.onChangeValue}
+                        className={c.button__dark}
+                        value={this.state.search}
+                        required>
+                        <option value={1}>По критериям</option>
+                        <option value={0}>По категориям</option>
+                    </select>
+                    {this.state.search === 1 && <Criterion
+                        style={this.state.style}
+                        dresscode={this.state.dresscode}
+                        season={this.state.season}
+                        onChangeCriterion={this.onChangeCriterion}/>}
+                    {this.state.search === 0 && <Category
                         onChangeCategory={this.onChangeCategory}
                         category={this.state.category}/>}
+                </div>
+                <div className={c.searchResult}>
+                    <select value={this.state.sort} onChange={this.changeSort}
+                            className={c.button__light + " " + c.button__light__brown} required>
+                        <option value={"Likes"}>
+                            По популярности
+                        </option>
+                        <option value={"CreationDate"}>
+                            По дате добавления
+                        </option>
+                    </select>
+                    <div className={c.gallery}>
+                        {this.state.Photos.map(u => <Element key={u.idCollage}
+                                                             isLike={u.isLike}
+                                                             likes={u.Likes}
+                                                             src={"data:image/png;base64," + u.Photo}
+                                                             onLike={this.onLike(u.idCollage)}/>)}
                     </div>
-                    <div className={c.searchResult}>
-                        <select value={this.state.sort} onChange={this.changeSort}
-                                className={c.button__light + " " + c.button__light__brown} required>
-                            <option value={"Likes"}>
-                                По популярности
-                            </option>
-                            <option value={"CreationDate"}>
-                                По дате добавления
-                            </option>
-                        </select>
-                        <div className={c.gallery}>
-                            {this.state.Photos.map(u => <Element key={u.idCollage}
-                                                                 isLike={u.isLike}
-                                                                 likes={u.Likes}
-                                                                 src={"data:image/png;base64," + u.Photo}
-                                                                 onLike={this.onLike(u.idCollage)}/>)}
-                        </div>
-                        <div className={c.bottomButtonsLeft}>
+                    <div className={c.bottomButtonsLeft}>
                         <span className={this.state.block || this.state.page === 0
                             ? c.button__light + " " + c.button__light__brown
                             + " " + c.button_disabled + " " + c.margin
                             : c.button__light + " " + c.button__light__brown
                             + " " + c.margin}
                               onClick={this.changePage(0)}>
-                        В начало
-                    </span>
-                            <span onClick={this.changePage(this.state.page - 1)}
-                                  className={this.state.block || this.state.page === 0
-                                      ? c.button__light + " " + c.button__light__brown
-                                      + " " + c.button_disabled
-                                      : c.button__light + " " + c.button__light__brown}>
-                        Предыдущая
-                    </span>
-                        </div>
-                        <div className={c.bottomButtonsRight}>
+                            В начало
+                        </span>
+                        <span onClick={this.changePage(this.state.page - 1)}
+                              className={this.state.block || this.state.page === 0
+                                  ? c.button__light + " " + c.button__light__brown
+                                  + " " + c.button_disabled
+                                  : c.button__light + " " + c.button__light__brown}>
+                            Предыдущая
+                        </span>
+                    </div>
+                    <div className={c.bottomButtonsRight}>
                         <span onClick={this.changePage(this.state.page + 1)}
                               className={this.state.block || this.state.page === this.state.lastPage
                                   ? c.button__light + " " + c.button__light__brown
                                   + " " + c.button_disabled + " " + c.margin
                                   : c.button__light + " " + c.button__light__brown
                                   + " " + c.margin}>
-                        Следующая
-                    </span>
-                            <span onClick={this.changePage(this.state.lastPage)}
-                                  className={this.state.block || this.state.page === this.state.lastPage
-                                      ? c.button__light + " " + c.button__light__brown
-                                      + " " + c.button_disabled
-                                      : c.button__light + " " + c.button__light__brown}>
+                            Следующая
+                        </span>
+                        <span onClick={this.changePage(this.state.lastPage)}
+                              className={this.state.block || this.state.page === this.state.lastPage
+                                  ? c.button__light + " " + c.button__light__brown
+                                  + " " + c.button_disabled
+                                  : c.button__light + " " + c.button__light__brown}>
                             В конец
                         </span>
-                        </div>
                     </div>
                 </div>
-                <div className={c.bottom}>
-                    <img className={c.bottom_icon} src={logo} alt={""}/>
-                </div>
             </div>
-        )
-    }
+            <div className={c.bottom}>
+                <img className={c.bottom_icon} src={logo} alt={""}/>
+            </div>
+        </div>
+    )
+}
 }
 
 export default withAuthRedirect(Find);

@@ -17,6 +17,7 @@ class Wardrobe extends React.Component {
         page: 0,
         lastPage: 0
     }
+    isMount = false;
 
     confirmDeleteMessage = {
         title: "Удаление элементов",
@@ -29,11 +30,12 @@ class Wardrobe extends React.Component {
                         if (photo.delete)
                             deleteThing(photo.idThing)
                     })
-                    this.setState({
-                        Photos: this.state.Photos.filter((photo) => {
-                            return !photo.delete
+                    if (this.isMount)
+                        this.setState({
+                            Photos: this.state.Photos.filter((photo) => {
+                                return !photo.delete
+                            })
                         })
-                    })
                 }
             },
             {
@@ -59,26 +61,31 @@ class Wardrobe extends React.Component {
     }
 
     async componentDidMount() {
+        this.isMount = true;
         this.setState({block: true})
         let data = await getThing(this.state.option);
-        this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        if (this.isMount)
+            this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
         let LP = Math.ceil(data.count / 12 - 1)
-        this.setState({
-            block: false,
-            lastPage: LP === -1 ? 0 : LP
-        })
+        if (this.isMount)
+            this.setState({
+                block: false,
+                lastPage: LP === -1 ? 0 : LP
+            })
     }
 
     onChangeValue = async (e) => {
         this.setState({option: e.target.value})
         this.setState({block: true})
         let data = await getThing(e.target.value);
-        this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        if (this.isMount)
+            this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
         let LP = Math.ceil(data.count / 12 - 1)
-        this.setState({
-            block: false,
-            lastPage: LP === -1 ? 0 : LP
-        })
+        if (this.isMount)
+            this.setState({
+                block: false,
+                lastPage: LP === -1 ? 0 : LP
+            })
     }
 
     chooseForDelete = (photoId) => () => {
@@ -115,13 +122,18 @@ class Wardrobe extends React.Component {
             this.setState({page, block: true});
             let data = await getThing(this.state.option, page * 12);
             let LP = Math.ceil(data.count / 12 - 1)
-            this.setState({
-                block: false,
-                Photos: data.rows.map(d => ({...d, delete: false})),
-                lastPage: LP === -1 ? 0 : LP
-            })
+            if (this.isMount)
+                this.setState({
+                    block: false,
+                    Photos: data.rows.map(d => ({...d, delete: false})),
+                    lastPage: LP === -1 ? 0 : LP
+                })
         }
     };
+
+    componentWillUnmount(){
+        this.isMount = false;
+    }
 
     render() {
         return (

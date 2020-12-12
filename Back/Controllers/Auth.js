@@ -36,6 +36,7 @@ exports.isAuth = async (req, res) => {
                 ...users[0]
             })
     } catch (e) {
+        console.log(e);
         res.status(500).json({
             isAuth: false,
             error: e.sqlMessage

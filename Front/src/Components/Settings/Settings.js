@@ -3,7 +3,7 @@ import c from "./Settings.module.css";
 import logo from "../../assets/image/logo.svg";
 import Header from "../Header/Header";
 import withAuthRedirect from "../../HOC/withAuthRedirect";
-import {Link, Redirect} from "react-router-dom";
+import {Redirect} from "react-router-dom";
 import {Field, reduxForm} from "redux-form";
 import {confirmAlert} from "react-confirm-alert";
 import {DeleteUser, EditUser} from "../../Reducers/userReducer";
@@ -107,7 +107,7 @@ class Settings extends React.Component {
     }
 
     state = {
-        message:""
+        message: ""
     }
 
     Submit = (data) => {
@@ -135,7 +135,7 @@ class Settings extends React.Component {
 
     render() {
         if (this.props.isDeleted) {
-            return <Redirect to='/auth' />
+            return <Redirect to='/auth'/>
         }
         return (
             <div>

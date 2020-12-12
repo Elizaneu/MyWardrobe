@@ -15,16 +15,20 @@ class Favourites extends React.Component {
         page: 0,
         lastPage: 0
     }
+    isMount = false;
 
     async componentDidMount() {
+        this.isMount = true;
         this.setState({block: true});
         let data = await getLikedCollage("","","","Likes",0, 12)
-        this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
+        if (this.isMount)
+            this.setState({Photos: data.rows.map(d => ({...d, delete: false}))})
         let LP = Math.ceil(data.count / 12 - 1)
-        this.setState({
-            block: false,
-            lastPage: LP === -1 ? 0 : LP
-        })
+        if (this.isMount)
+            this.setState({
+                block: false,
+                lastPage: LP === -1 ? 0 : LP
+            })
     }
 
     changePage = (page) => async () => {
@@ -32,18 +36,19 @@ class Favourites extends React.Component {
             this.setState({page, block: true});
             let data = await getCollageAll("","","","Likes", page * 12, 12);
             let LP = Math.ceil(data.count / 12 - 1)
-            this.setState({
-                block: false,
-                Photos: data.rows.map(d => ({...d, delete: false})),
-                lastPage: LP === -1 ? 0 : LP
-            })
+            if (this.isMount)
+                this.setState({
+                    block: false,
+                    Photos: data.rows.map(d => ({...d, delete: false})),
+                    lastPage: LP === -1 ? 0 : LP
+                })
         }
     };
 
     onLike = (id) => async () => {
         if (this.state.Photos.find(u => u.idCollage === id).isLike) {
             let data = await deleteLike(id);
-            if (data.isDeleteLike) {
+            if (data.isDeleteLike && this.isMount) {
                 this.setState(state => ({
                     ...state,
                     Photos: state.Photos.map(u => {
@@ -56,7 +61,7 @@ class Favourites extends React.Component {
             }
         } else {
             let data = await likeCollage(id);
-            if (data.isLike) {
+            if (data.isLike && this.isMount) {
                 this.setState(state => ({
                     ...state,
                     Photos: state.Photos.map(u => {
@@ -68,6 +73,10 @@ class Favourites extends React.Component {
                 }))
             }
         }
+    }
+
+    componentWillUnmount () {
+        this.isMount = false;
     }
 
     render() {
